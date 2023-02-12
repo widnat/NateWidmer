@@ -42,7 +42,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(25%, auto));
+  grid-template-columns: repeat(2, minmax(25%, auto));
   width: var(--max-width);
   max-width: 100%;
 }
@@ -50,7 +50,7 @@
 .card {
   padding: 1rem 1.2rem;
   margin: 10px;
-  border-radius: var(--border-radius);
+  border-radius: 20px;
   background: transparent;
   border: 1px solid rgba(var(--card-border-rgb), 0);
   transition: background 200ms, border 200ms;
@@ -72,8 +72,7 @@
   margin: 0;
   font-size: medium;
   line-height: 1.5;
-  max-width: 30ch;
-  color: #FFFFFF;
+  color: hsl(0, 0%, 100%);
 }
 
 .center {
@@ -160,6 +159,7 @@
   .card:hover {
     background: rgba(var(--card-rgb), 0.1);
     border: 1px solid rgba(var(--card-border-rgb), 0.15);
+    background-color: rebeccapurple;
   }
 
   .card:hover span {
