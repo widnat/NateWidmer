@@ -1,17 +1,10 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '@/styles/Home.module.css'
-import s from '@/styles/globals'
 import Header from 'components/NavBar'
 import ProjectDetails from 'components/ProjectDetails'
-import { useRouter } from 'next/router';
 
 export default function Home() {
-  const router = useRouter()
-
-  function goToMemoizit() {
-    router.push("");
-  }
 
   return (
     <>
@@ -24,29 +17,28 @@ export default function Home() {
       </Head>
       <Header/>
       <main className={styles.main}>
-        <h1>
-
-        </h1>
         <Image className={styles.logo}
                src="/images/HeadShot.png"
                alt="head shot"
                width={180}
-               height={190}
-               priority />
-
+               height={190} />
         <div className={styles.grid}>
           <ProjectDetails route=''
-                          title='1'
-                          description='just some random text to see what color'/>
+                          title='Memoizit'
+                          description='Similar to memoization, this is an app that helps to keep track of the helpful things learned'
+                          techStack='Tech Stack: nothing yet'/>
           <ProjectDetails route=''
-                          title='2'
-                          description='f'/>
+                          title='Skull King'
+                          description='This is a simple score keeper for a game called Skull King.'
+                          techStack='Tech Stack: DynamoDb'/>
           <ProjectDetails route=''
                           title='3'
-                          description='s'/>
+                          description='s'
+                          techStack=''/>
           <ProjectDetails route=''
                           title='4'
-                          description='a'/>
+                          description='a'
+                          techStack=''/>
         </div>
       </main>
     </>
