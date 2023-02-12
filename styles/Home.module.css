@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  background-color: #2e2d2b;
   padding: 6rem;
   min-height: 100vh;
 }
@@ -48,8 +49,9 @@
 
 .card {
   padding: 1rem 1.2rem;
+  margin: 10px;
   border-radius: var(--border-radius);
-  background: rgba(var(--card-rgb), 0);
+  background: transparent;
   border: 1px solid rgba(var(--card-border-rgb), 0);
   transition: background 200ms, border 200ms;
 }
@@ -60,16 +62,18 @@
 }
 
 .card h2 {
+  font-size: large;
   font-weight: 600;
   margin-bottom: 0.7rem;
+  color: #FFFFFF;
 }
 
 .card p {
   margin: 0;
-  opacity: 0.6;
-  font-size: 0.9rem;
+  font-size: medium;
   line-height: 1.5;
   max-width: 30ch;
+  color: #FFFFFF;
 }
 
 .center {
