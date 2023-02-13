@@ -1,21 +1,17 @@
 import React from "react";
 import Link from "next/link";
+import MenuDropdown from "./MenuDropdown";
 
 export default function NavBar() {
     
     return (
-        <nav className="flex light-bg justify-space">
-            <div className="logo white">
-              Nate Widmer
+        <nav className="flex">
+            <div className="title">
+            My Projects
             </div>
 
-            <ul className="flex white">
-                <li className="green">
-                    <Link href="/">Home</Link>
-                </li>
-                <li>
-                    <Link href="/#about">Memoizit</Link>
-                </li>
+            <ul className="flex">
+                <MenuDropdown/>
                 <li>
                     <Link href="/#about">About Me</Link>
                 </li>
