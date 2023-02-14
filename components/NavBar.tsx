@@ -1,21 +1,35 @@
 import React from "react";
-import Link from "next/link";
-import MenuDropdown from "./MenuDropdown";
+import Nav from 'react-bootstrap/Nav';
+import { useRouter } from 'next/router';
+
 
 export default function NavBar() {
+    const router = useRouter()
     
-    return (
-        <nav className="flex">
-            <div className="title">
-            My Projects
-            </div>
+    function navigate(event:string) {
+        // if (event === /)
+        // router.push(route);
+    }
 
-            <ul className="flex">
-                <MenuDropdown/>
-                <li>
-                    <Link href="/#about">About Me</Link>
-                </li>
-            </ul>
-        </nav>
+    return (
+        <Nav
+          activeKey="/home"
+          onSelect={(selectedKey) => navigate(selectedKey!)}
+          >
+          <Nav.Item>
+            <Nav.Link href="/home">
+                <h1 className="green">Home</h1>
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/home">Memoizit</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/home">Skull King</Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link href="/home">About Me</Nav.Link>
+          </Nav.Item>
+        </Nav>
     )
 }
