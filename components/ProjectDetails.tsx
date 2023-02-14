@@ -1,8 +1,6 @@
 import React from "react";
 import { useRouter } from 'next/router';
 import styles from '@/styles/Home.module.css'
-import { Inter } from '@next/font/google'
-const inter = Inter({ subsets: ['latin'] })
 
 type Props = {
     route: string, 
