@@ -19,7 +19,8 @@ export default function ProjectCard({
 	variant,
 }: Props) {
 	const router = useRouter();
-	const contrastText = variant.toLowerCase() === "light" ? "dark" : "white";
+	const bgColor = variant.toLowerCase() === "light" ? "white" : "dark";
+	const contrastColor = variant.toLowerCase() === "light" ? "dark" : "white";
 	const contrastVariant = variant.toLowerCase() === "light" ? "dark" : "light";
 
 	function navigate() {
@@ -29,9 +30,9 @@ export default function ProjectCard({
 	return (
 		<Card
 			style={{ margin: "1rem" }}
-			bg={variant.toLowerCase()}
+			bg={bgColor}
 			key={variant}
-			text={contrastText}
+			text={contrastColor}
 			className="mb-2"
 		>
 			<Card.Body>

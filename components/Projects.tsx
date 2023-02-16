@@ -1,12 +1,12 @@
 import React from "react";
-import styles from "@/styles/Home.module.css";
 import ProjectCard from "./ProjectCard";
+import Stack from "react-bootstrap/Stack";
 
 export default function Projects() {
 	const theme = "light";
 
 	return (
-		<div className={styles.grid}>
+		<Stack gap={3}>
 			<ProjectCard
 				route=""
 				title="Memoizit"
@@ -35,6 +35,6 @@ export default function Projects() {
 				techStack=""
 				variant={theme}
 			/>
-		</div>
+		</Stack>
 	);
 }

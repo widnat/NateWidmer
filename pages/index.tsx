@@ -1,8 +1,8 @@
 import Head from "next/head";
-import Image from "next/image";
 import styles from "@/styles/Home.module.css";
 import NavBar from "components/NavBar";
 import Projects from "@/components/Projects";
+import AboutMe from "@/components/AboutMe";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Home() {
@@ -15,12 +15,7 @@ export default function Home() {
 			</Head>
 			<NavBar />
 			<main className={styles.main}>
-				<Image
-					src="/images/HeadShot.png"
-					alt="head shot"
-					width={180}
-					height={190}
-				/>
+				<AboutMe />
 				<Projects />
 			</main>
 		</>
