@@ -1,6 +1,9 @@
 import React from "react";
-import Nav from 'react-bootstrap/Nav';
 import { useRouter } from 'next/router';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+
 
 
 export default function NavBar() {
@@ -12,24 +15,15 @@ export default function NavBar() {
     }
 
     return (
-        <Nav
-          activeKey="/home"
-          onSelect={(selectedKey) => navigate(selectedKey!)}
-          >
-          <Nav.Item>
-            <Nav.Link href="/home">
-                <h1 className="green">Home</h1>
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/home">Memoizit</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/home">Skull King</Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link href="/home">About Me</Nav.Link>
-          </Nav.Item>
-        </Nav>
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <Navbar.Brand href="/">Projects</Navbar.Brand>Pricing
+          <Nav className="me-auto">
+            <Nav.Link href="#home">1111111111</Nav.Link>
+            <Nav.Link href="#features">222222222222</Nav.Link>
+            <Nav.Link href="#pricing">3333333333333</Nav.Link>
+          </Nav>
+        </Container>
+      </Navbar>
     )
 }

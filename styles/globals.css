@@ -44,8 +44,7 @@ body {
   font-family: 'Monospace';
 }
 
-
-.green {
-  color: green;
-  text-decoration-color: red;
+.link {
+  color: red;
+  font-size: large;
 }
