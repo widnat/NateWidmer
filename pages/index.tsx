@@ -1,5 +1,5 @@
 import Head from "next/head";
-import NavBar from "components/NavBar";
+import NavBar from "@/components/NavBar/NavBar";
 import Projects from "@/components/Projects";
 import AboutMe from "@/components/AboutMe";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -17,9 +17,8 @@ export default function Home() {
 					<link href="/styles/tailwind.css" rel="stylesheet"></link>
 				</Head>
 				<NavBar />
-				<h1 className="text-3xl font-bold underline">Hello world!</h1>
-				<main className="">
-					<ul>
+				<div>
+					<ul className="list-decimal">
 						<li>use redux: store data in a central place</li>
 						<li>reactquery: optimizes quieries kinda like memoization</li>
 						<li>tailwindcss or materialui. probably tailwindcss</li>
@@ -35,7 +34,7 @@ export default function Home() {
 					</ul>
 					<AboutMe />
 					<Projects />
-				</main>
+				</div>
 			</Provider>
 		</>
 	);
