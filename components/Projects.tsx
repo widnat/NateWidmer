@@ -8,6 +8,13 @@ export default function Projects() {
 	return (
 		<Stack gap={3}>
 			<ProjectCard
+				route="/calculator/calculator"
+				title="Calculator"
+				description="nothing"
+				techStack=""
+				variant={theme}
+			/>
+			<ProjectCard
 				route=""
 				title="Memoizit"
 				description="Similar to memoization, this is an app that helps to keep track of the helpful things learned"
