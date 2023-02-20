@@ -11,7 +11,7 @@ export default function ColorBtn({ action, text }: Props) {
 			<button
 				type="button"
 				className="rounded-full h-20 w-20 flex items-center bg-yellow-500 justify-center shadow-lg hover:border-2 hover:border-gray-200 focus:outline-none"
-				onClick={() => action()}
+				onClick={() => action(text)}
 			>
 				{text}
 			</button>

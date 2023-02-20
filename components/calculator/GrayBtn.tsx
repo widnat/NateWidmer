@@ -11,7 +11,7 @@ export default function GrayBtn({ action, text }: Props) {
 			<button
 				type="button"
 				className="rounded-full h-20 w-20 flex items-center bg-gray-400 justify-center shadow-lg hover:border-2 hover:border-gray-200 focus:outline-none"
-				onClick={() => action()}
+				onClick={() => action(text)}
 			>
 				{text}
 			</button>
