@@ -19,10 +19,10 @@ export default function NavBar() {
 					<div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
 						<div className="hidden sm:ml-6 sm:block">
 							<div className="flex space-x-4">
-								<HrefBtn route="#" text="Home" />
+								<HrefBtn route="/" text="Home" />
 								<HrefBtn route="#" text="Memoizit" />
 								<HrefBtn route="#" text="skull King Keeper" />
-								<HrefBtn route="#" text="Calculator" />
+								<HrefBtn route="/calculator/calculator" text="Calculator" />
 							</div>
 						</div>
 					</div>
@@ -35,10 +35,10 @@ export default function NavBar() {
 			{dropdownIsShowing && (
 				<div className="sm:hidden" id="mobile-menu">
 					<div className="space-y-1 px-2 pt-2 pb-3">
-						<MobileHrefBtn route="#" text="Home" />
+						<MobileHrefBtn route="/" text="Home" />
 						<MobileHrefBtn route="#" text="Memoizit" />
 						<MobileHrefBtn route="#" text="skull King Keeper" />
-						<MobileHrefBtn route="#" text="Calculator" />
+						<MobileHrefBtn route="/calculator/calculator" text="Calculator" />
 					</div>
 				</div>
 			)}
