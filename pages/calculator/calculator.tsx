@@ -102,7 +102,7 @@ export default function Calculator() {
 						<div className="p-5 text-white text-center text-3xl">
 							Calculator
 						</div>
-						<div className=" p-5 pb-0 bg-slate-800 text-white text-right text-3xl">
+						<div className=" p-5 pb-0 h-12 bg-slate-800 text-white text-right text-3xl">
 							{firstNum} {operator} {secondNum}
 						</div>
 						<div className="p-5 text-white bg-slate-800 text-right text-3xl">
