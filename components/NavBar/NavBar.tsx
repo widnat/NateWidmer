@@ -13,7 +13,7 @@ export default function NavBar() {
 
 	return (
 		<nav className="bg-gray-800">
-			<div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+			<div className="mx-auto px-2 sm:px-6 lg:px-8">
 				<div className="relative flex h-16 items-center justify-between">
 					<MenuBtn changeDropdown={changeDropdown} />
 					<div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
@@ -21,7 +21,7 @@ export default function NavBar() {
 							<div className="flex space-x-4">
 								<HrefBtn route="/" text="Home" />
 								<HrefBtn route="#" text="Memoizit" />
-								<HrefBtn route="#" text="skull King Keeper" />
+								<HrefBtn route="/skullKing/skullKeeper" text="skull King" />
 								<HrefBtn route="/calculator/calculator" text="Calculator" />
 							</div>
 						</div>
@@ -37,7 +37,7 @@ export default function NavBar() {
 					<div className="space-y-1 px-2 pt-2 pb-3">
 						<MobileHrefBtn route="/" text="Home" />
 						<MobileHrefBtn route="#" text="Memoizit" />
-						<MobileHrefBtn route="#" text="skull King Keeper" />
+						<MobileHrefBtn route="/skullKing/skullKeeper" text="skull King" />
 						<MobileHrefBtn route="/calculator/calculator" text="Calculator" />
 					</div>
 				</div>
