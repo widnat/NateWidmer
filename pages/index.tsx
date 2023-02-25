@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar/NavBar";
 import Projects from "@/components/Projects";
 import AboutMe from "@/components/AboutMe";
 import "bootstrap/dist/css/bootstrap.min.css";
-import store from "../store";
+import store from "../store/store";
 import { Provider } from "react-redux";
 
 export default function Home() {

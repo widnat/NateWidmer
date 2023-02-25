@@ -3,8 +3,10 @@ import NavBar from "../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../components/skullKing/NavBar";
 import Title from "../../components/skullKing/Title";
 import TextInput from "../../components/skullKing/TextInput";
+import { useSelector } from "react-redux";
 
 export default function SkullKeeper() {
+	const players = useSelector(state: string => state.players);
 	const [player1, setPlayer1] = useState("");
 	const [player2, setPlayer2] = useState("");
 	const [player3, setPlayer3] = useState("");
