@@ -21,7 +21,7 @@ export default function NavBar() {
 							<div className="flex space-x-4">
 								<HrefBtn route="/" text="Home" />
 								<HrefBtn route="#" text="Memoizit" />
-								<HrefBtn route="/skullKing/skullKeeper" text="skull King" />
+								<HrefBtn route="/skullKeeper/players" text="skull Keeper" />
 								<HrefBtn route="/calculator/calculator" text="Calculator" />
 							</div>
 						</div>
@@ -37,7 +37,7 @@ export default function NavBar() {
 					<div className="space-y-1 px-2 pt-2 pb-3">
 						<MobileHrefBtn route="/" text="Home" />
 						<MobileHrefBtn route="#" text="Memoizit" />
-						<MobileHrefBtn route="/skullKing/skullKeeper" text="skull King" />
+						<MobileHrefBtn route="/skullKeeper/players" text="skull Keeper" />
 						<MobileHrefBtn route="/calculator/calculator" text="Calculator" />
 					</div>
 				</div>

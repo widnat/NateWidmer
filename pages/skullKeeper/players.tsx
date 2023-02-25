@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import NavBar from "../../components/NavBar/NavBar";
-import SkullKingNavBar from "../../components/skullKing/NavBar";
+import SkullKeeperNavBar from "../../components/skullKing/NavBar";
 import Title from "../../components/skullKing/Title";
 import TextInput from "../../components/skullKing/TextInput";
 
-export default function Calculator() {
+export default function SkullKeeper() {
 	const [player1, setPlayer1] = useState("");
 	const [player2, setPlayer2] = useState("");
 	const [player3, setPlayer3] = useState("");
@@ -17,8 +17,8 @@ export default function Calculator() {
 	return (
 		<div>
 			<NavBar />
-			<Title title="Skull King" page="Players" />
-			{player1 !== "" && player2 !== "" && <SkullKingNavBar page="Players" />}
+			<Title title="Skull Keeper" page="Players" />
+			<SkullKeeperNavBar page="Players" round={0} />
 			<form className="flex justify-center">
 				<div className="flex flex-wrap justify-center -mx-3 mb-3 max-w-4xl">
 					<TextInput
