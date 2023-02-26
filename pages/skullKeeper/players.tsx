@@ -3,10 +3,18 @@ import NavBar from "../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../components/skullKing/NavBar";
 import Title from "../../components/skullKing/Title";
 import TextInput from "../../components/skullKing/TextInput";
-import { useSelector } from "react-redux";
+import { useStoreSelector } from "../../store/hooks";
+import { playersState } from "../../store/skullKeeper/playersSlice";
+import type {
+	Players,
+	Rounds,
+	Round,
+	RoundInfo,
+	PlayerRound,
+} from "../../types/skullKeeper";
 
 export default function SkullKeeper() {
-	const players = useSelector(state: string => state.players);
+	const players = useStoreSelector(playersState);
 	const [player1, setPlayer1] = useState("");
 	const [player2, setPlayer2] = useState("");
 	const [player3, setPlayer3] = useState("");
