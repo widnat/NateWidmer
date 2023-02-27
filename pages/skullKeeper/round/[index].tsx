@@ -1,23 +1,48 @@
 import { useState, useEffect } from "react";
-import NavBar from "../../components/NavBar/NavBar";
-import SkullKeeperNavBar from "../../components/skullKing/NavBar";
-import Title from "../../components/skullKing/Title";
-import TextInput from "../../components/skullKing/TextInput";
-import { useStoreDispatch } from "../../store/hooks";
-import { addPlayer } from "../../store/skullKeeper/playersSlice";
-import type { Player } from "../../types/skullKeeper";
+import NavBar from "../../../components/NavBar/NavBar";
+import SkullKeeperNavBar from "../../../components/skullKing/NavBar";
+import Title from "../../../components/skullKing/Title";
+import TextInput from "../../../components/skullKing/TextInput";
+import { useStoreDispatch, useStoreSelector } from "../../../store/hooks";
+import { roundsState, addRound } from "../../../store/skullKeeper/roundsSlice";
+import { playersState } from "../../../store/skullKeeper/playersSlice";
+import type { Player, RoundInfo } from "../../../types/skullKeeper";
+import { useRouter } from "next/router";
 
 export default function SkullKeeper() {
-	const [player1, setPlayer1] = useState("");
-	const [player2, setPlayer2] = useState("");
-	const [player3, setPlayer3] = useState("");
-	const [player4, setPlayer4] = useState("");
-	const [player5, setPlayer5] = useState("");
-	const [player6, setPlayer6] = useState("");
-	const [player7, setPlayer7] = useState("");
-	const [player8, setPlayer8] = useState("");
+	const router = useRouter();
+	const roundIndex = Number(router.query.index);
+	const title = "Round " + roundIndex;
+	const players = useStoreSelector(playersState).players;
+	const round = getRound();
+	round.playerRounds;
+	const [PlayerRound1, setPlayer1] = useState("");
+	const [PlayerRound2, setPlayer2] = useState("");
+	const [PlayerRound3, setPlayer3] = useState("");
+	const [PlayerRound4, setPlayer4] = useState("");
+	const [PlayerRound5, setPlayer5] = useState("");
+	const [PlayerRound6, setPlayer6] = useState("");
+	const [PlayerRound7, setPlayer7] = useState("");
+	const [PlayerRound8, setPlayer8] = useState("");
 	const dispatch = useStoreDispatch();
+	const previousRoute = "/skullKeeper/round[" + String(roundIndex - 1) + "]";
 	const nextRoute = "/skullKeeper/round[1]";
+	const playersRoute = "/skullKeeper/players";
+	const resultsRoute = "/skullKeeper/results";
+
+	function getRound() {
+		var rounds = useStoreSelector(roundsState).rounds;
+		if (rounds.length > roundIndex) return rounds[roundIndex];
+		else {
+			dispatch(
+				addRound({
+					numPlayers: players.length,
+					roundIndex: roundIndex,
+				} as RoundInfo)
+			);
+			return useStoreSelector(roundsState).rounds[roundIndex];
+		}
+	}
 
 	function handleNavigate(route: string) {
 		var index = 0;
@@ -43,10 +68,10 @@ export default function SkullKeeper() {
 	return (
 		<div>
 			<NavBar />
-			<Title title="Skull Keeper" page="Players" />
+			<Title title="Skull Keeper" page={title} />
 			<SkullKeeperNavBar
-				page="Players"
-				round={0}
+				page="Round"
+				round={roundIndex}
 				handleNavigate={handleNavigate}
 			/>
 			<form className="flex justify-center">

@@ -3,10 +3,7 @@ import type { StoreState } from "../store";
 import type { Players, Player } from "../../types/skullKeeper";
 
 const initialState: Players = {
-	players: [
-		{ name: "", index: 0 },
-		{ name: "", index: 1 },
-	],
+	players: [],
 };
 
 export const playersSlice = createSlice({

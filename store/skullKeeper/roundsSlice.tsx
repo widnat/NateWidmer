@@ -42,6 +42,6 @@ export const roundsSlice = createSlice({
 
 export const { addRound, updateRound } = roundsSlice.actions;
 
-export const rounds = (state: StoreState) => state.rounds;
+export const roundsState = (state: StoreState) => state.rounds;
 
 export default roundsSlice.reducer;
