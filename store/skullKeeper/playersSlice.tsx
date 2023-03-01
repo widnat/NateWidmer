@@ -3,17 +3,22 @@ import type { StoreState } from "../store";
 import type { Players, Player } from "../../types/skullKeeper";
 
 const initialState: Players = {
-	players: [],
+	players: [
+		{ name: "", index: 0 },
+		{ name: "", index: 1 },
+		{ name: "", index: 2 },
+		{ name: "", index: 3 },
+		{ name: "", index: 4 },
+		{ name: "", index: 5 },
+		{ name: "", index: 6 },
+		{ name: "", index: 7 },
+	],
 };
 
 export const playersSlice = createSlice({
 	name: "players",
 	initialState,
 	reducers: {
-		addPlayer: (state, action: PayloadAction<Player>) => {
-			action.payload.index = state.players.length;
-			state.players.push(action.payload);
-		},
 		updatePlayer: (state, action: PayloadAction<Player>) => {
 			if (state.players.length > action.payload.index)
 				state.players[action.payload.index].name = action.payload.name;
@@ -22,7 +27,7 @@ export const playersSlice = createSlice({
 	},
 });
 
-export const { addPlayer, updatePlayer } = playersSlice.actions;
+export const { updatePlayer } = playersSlice.actions;
 
 export const playersState = (state: StoreState) => state.players;
 

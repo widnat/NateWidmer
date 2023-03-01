@@ -10,6 +10,7 @@ export default function AboutMe() {
 				alt="head shot"
 				width={180}
 				height={190}
+				
 			/>
 			<Stack gap={3}>
 				<div className="bg-light border">First item</div>

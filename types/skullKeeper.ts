@@ -1,8 +1,3 @@
-export interface RoundInfo {
-	numPlayers: number;
-	roundIndex: number;
-}
-
 export interface Players {
 	players: Array<Player>;
 }
