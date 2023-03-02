@@ -29,6 +29,6 @@ export const playersSlice = createSlice({
 
 export const { updatePlayer } = playersSlice.actions;
 
-export const playersState = (state: StoreState) => state.players;
+export const playersState = (state: StoreState) => state.players.players;
 
 export default playersSlice.reducer;

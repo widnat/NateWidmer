@@ -12,13 +12,17 @@ export default function SkullKeeper() {
 	const router = useRouter();
 	const dispatch = useStoreDispatch();
 	const players = useStoreSelector(playersState);
-	const nextRoute = "/skullKeeper/round/1";
-	const playerInputs = players.players.map((player: Player) => {
+	const playerInputs = players.map((player: Player) => {
 		return <PlayerNameInput key={player.index} player={player} />;
 	});
+	
 	function handleNavigate(route: string) {
-		dispatch(createRounds(1));
-		router.push(nextRoute);
+		var numPlayers = 0;
+		players.forEach((player: Player) => {
+			if (player.name) ++numPlayers;
+		});
+		dispatch(createRounds(numPlayers));
+		router.push("/skullKeeper/round/1");
 	}
 
 	return (

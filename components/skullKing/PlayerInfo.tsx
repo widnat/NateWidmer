@@ -1,5 +1,5 @@
 import React from "react";
-import ShortInput from "./ShortInput";
+import BidBtn from "./BidBtn";
 import ShortDisplay from "./ShortDisplay";
 import { useStoreDispatch, useStoreSelector } from "../../store/hooks";
 import { playersState } from "../../store/skullKeeper/playersSlice";
@@ -16,14 +16,14 @@ export default function PlayerInfo({ player, playerRound }: Props) {
 	return (
 		<div className="flex-col">
 			<label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-				Player Name
+				{player.name}
 			</label>
 			<form className="flex-row">
-				<div className="flex flex-wrap justify-center -mx-3 mb-3 max-w-6xl">
-					<ShortInput />
-					<ShortInput />
-					<ShortInput />
-					<ShortDisplay />
+				<div className="flex -mx-3 mb-3">
+					<BidBtn roundIndex={1} player={player} playerRound={playerRound} />
+					{/* <BidBtn />
+					<BidBtn />
+					<ShortDisplay /> */}
 				</div>
 			</form>
 		</div>

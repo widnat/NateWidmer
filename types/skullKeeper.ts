@@ -12,8 +12,14 @@ export interface Rounds {
 }
 
 export interface Round {
-	roundIndex: number
+	roundIndex: number;
 	playerRounds: Array<PlayerRound>;
+}
+
+export interface PlayerRoundUpdate {
+	roundIndex: number;
+	playerIndex: number;
+	value: number;
 }
 
 export interface PlayerRound {
