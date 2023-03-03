@@ -39,10 +39,28 @@ export const roundsSlice = createSlice({
 			state.rounds[update.roundIndex].playerRounds[update.playerIndex].bid =
 				update.value;
 		},
+		updatePlayerRoundWon: (state, action: PayloadAction<PlayerRoundUpdate>) => {
+			var update = action.payload;
+			state.rounds[update.roundIndex].playerRounds[update.playerIndex].won =
+				update.value;
+		},
+		updatePlayerRoundBonus: (
+			state,
+			action: PayloadAction<PlayerRoundUpdate>
+		) => {
+			var update = action.payload;
+			state.rounds[update.roundIndex].playerRounds[update.playerIndex].bonus =
+				update.value;
+		},
 	},
 });
 
-export const { createRounds, updatePlayerRoundBid } = roundsSlice.actions;
+export const {
+	createRounds,
+	updatePlayerRoundBid,
+	updatePlayerRoundWon,
+	updatePlayerRoundBonus,
+} = roundsSlice.actions;
 
 export const roundsState = (state: StoreState) => state.rounds.rounds;
 

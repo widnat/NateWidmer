@@ -1,5 +1,7 @@
 import React from "react";
 import BidBtn from "./BidBtn";
+import WonBtn from "./WonBtn";
+import BonusBtn from "./BonusBtn";
 import ShortDisplay from "./ShortDisplay";
 import { useStoreDispatch, useStoreSelector } from "../../store/hooks";
 import { playersState } from "../../store/skullKeeper/playersSlice";
@@ -14,16 +16,16 @@ export default function PlayerInfo({ player, playerRound }: Props) {
 	const dispatch = useStoreDispatch();
 
 	return (
-		<div className="flex-col">
-			<label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+		<div className="flex-col mx-2 mb-2">
+			<label className="uppercase tracking-wide text-gray-700 text-xs font-bold">
 				{player.name}
 			</label>
 			<form className="flex-row">
-				<div className="flex -mx-3 mb-3">
+				<div className="flex">
 					<BidBtn roundIndex={1} player={player} playerRound={playerRound} />
-					{/* <BidBtn />
-					<BidBtn />
-					<ShortDisplay /> */}
+					<WonBtn roundIndex={1} player={player} playerRound={playerRound} />
+					<BonusBtn roundIndex={1} player={player} playerRound={playerRound} />
+					<ShortDisplay title="Total" value={playerRound.total} />
 				</div>
 			</form>
 		</div>

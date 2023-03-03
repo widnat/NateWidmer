@@ -50,8 +50,8 @@ export default function SkullKeeper() {
 				handleNavigate={handleNavigate}
 			/>
 			<div className="flex justify-center">
-				<div className="flex flex-wrap justify-center max-w-6xl">
-					{playerInfoList}
+				<div className="flex justify-center lg:max-w-5xl sm:max-w-xs">
+					<div className="flex flex-wrap justify-start">{playerInfoList}</div>
 				</div>
 			</div>
 		</div>

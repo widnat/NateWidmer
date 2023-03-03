@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Player, PlayerRound } from "../../types/skullKeeper";
 import { useStoreDispatch } from "../../store/hooks";
-import { updatePlayerRoundBid } from "../../store/skullKeeper/roundsSlice";
+import { updatePlayerRoundWon } from "../../store/skullKeeper/roundsSlice";
 import NumberBtn from "./NumberBtn";
 import { PlayerRoundUpdate } from "../../types/skullKeeper";
 
@@ -11,7 +11,7 @@ type Props = {
 	playerRound: PlayerRound;
 };
 
-export default function BidBtn({ roundIndex, player, playerRound }: Props) {
+export default function WonBtn({ roundIndex, player, playerRound }: Props) {
 	const dispatch = useStoreDispatch();
 	const [showPopup, setShowPopup] = useState(false);
 	const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -21,17 +21,17 @@ export default function BidBtn({ roundIndex, player, playerRound }: Props) {
 				<NumberBtn
 					key={i}
 					text={i}
-					action={(i: number) => handleBidChanged(i)}
+					action={(i: number) => handleWonChanged(i)}
 				/>
 			);
 	});
 
-	function handleBidChanged(bid: number) {
+	function handleWonChanged(won: number) {
 		dispatch(
-			updatePlayerRoundBid({
+			updatePlayerRoundWon({
 				roundIndex: roundIndex,
 				playerIndex: player.index,
-				value: bid,
+				value: won,
 			} as PlayerRoundUpdate)
 		);
 		setShowPopup(false);
@@ -44,7 +44,7 @@ export default function BidBtn({ roundIndex, player, playerRound }: Props) {
 				onClick={() => setShowPopup(true)}
 				className="inline-flex w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 "
 			>
-				BID: {playerRound.bid != -1 && playerRound.bid}
+				WON: {playerRound.won != -1 && playerRound.won}
 			</button>
 
 			{showPopup && (
@@ -66,7 +66,7 @@ export default function BidBtn({ roundIndex, player, playerRound }: Props) {
 												className="text-base font-semibold leading-6 text-gray-900"
 												id="modal-title"
 											>
-												Bid
+												Won
 											</h3>
 											<div className="flex flex-wrap">{numberButtons}</div>
 										</div>
