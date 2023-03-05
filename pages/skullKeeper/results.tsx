@@ -31,9 +31,9 @@ export default function Results() {
 	});
 
 	function getPlayer(playerRound1: PlayerRound, playerRound2: PlayerRound) {
-		if (playerRound1.total < playerRound2.total) return playerRound1.total;
+		if (playerRound1.total > playerRound2.total) return -1;
 
-		return playerRound2.total;
+		return 1;
 	}
 
 	function handleNavigate(route: string) {
