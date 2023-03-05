@@ -22,18 +22,9 @@ export default function PlayerInfo({ player, playerRound }: Props) {
 			</label>
 			<form className="flex-row">
 				<div className="flex">
-					<BidBtn
-						player={player}
-						playerRound={playerRound}
-					/>
-					<WonBtn
-						player={player}
-						playerRound={playerRound}
-					/>
-					<BonusBtn
-						player={player}
-						playerRound={playerRound}
-					/>
+					<BidBtn player={player} playerRound={playerRound} />
+					<WonBtn player={player} playerRound={playerRound} />
+					<BonusBtn player={player} playerRound={playerRound} />
 					<ShortDisplay title="Total" value={playerRound.total} />
 				</div>
 			</form>

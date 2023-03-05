@@ -1,7 +1,10 @@
 import { useState } from "react";
 import type { Player, PlayerRound } from "../../types/skullKeeper";
 import { useStoreDispatch } from "../../store/hooks";
-import { updatePlayerRoundWon } from "../../store/skullKeeper/roundsSlice";
+import {
+	updatePlayerRoundWon,
+	updatePlayerRoundTotals,
+} from "../../store/skullKeeper/roundsSlice";
 import NumberBtn from "./NumberBtn";
 import { PlayerRoundUpdate } from "../../types/skullKeeper";
 
@@ -26,13 +29,13 @@ export default function WonBtn({ player, playerRound }: Props) {
 	});
 
 	function handleWonChanged(won: number) {
-		dispatch(
-			updatePlayerRoundWon({
-				roundIndex: playerRound.roundIndex,
-				playerIndex: player.index,
-				value: won,
-			} as PlayerRoundUpdate)
-		);
+		var playerRoundUpdate = {
+			roundIndex: playerRound.roundIndex,
+			playerIndex: player.index,
+			value: won,
+		} as PlayerRoundUpdate;
+		dispatch(updatePlayerRoundWon(playerRoundUpdate));
+		dispatch(updatePlayerRoundTotals(playerRoundUpdate));
 		setShowPopup(false);
 	}
 

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import type { Player, PlayerRound } from "../../types/skullKeeper";
 import { useStoreDispatch } from "../../store/hooks";
-import { updatePlayerRoundBonus } from "../../store/skullKeeper/roundsSlice";
+import {
+	updatePlayerRoundBonus,
+	updatePlayerRoundTotals,
+} from "../../store/skullKeeper/roundsSlice";
 import NumberBtn from "./NumberBtn";
 import { PlayerRoundUpdate } from "../../types/skullKeeper";
 
@@ -15,13 +18,13 @@ export default function BonusBtn({ player, playerRound }: Props) {
 	const [showPopup, setShowPopup] = useState(false);
 
 	function handleBonusChanged(bonus: number) {
-		dispatch(
-			updatePlayerRoundBonus({
-				roundIndex: playerRound.roundIndex,
-				playerIndex: player.index,
-				value: bonus,
-			} as PlayerRoundUpdate)
-		);
+		var playerRoundUpdate = {
+			roundIndex: playerRound.roundIndex,
+			playerIndex: player.index,
+			value: bonus,
+		} as PlayerRoundUpdate;
+		dispatch(updatePlayerRoundBonus(playerRoundUpdate));
+		dispatch(updatePlayerRoundTotals(playerRoundUpdate));
 		setShowPopup(false);
 	}
 

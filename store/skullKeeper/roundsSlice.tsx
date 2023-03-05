@@ -11,16 +11,18 @@ const initialState: Rounds = {
 	rounds: [],
 };
 
-function getTotal(playerRound: PlayerRound) {
+function getRoundTotal(playerRound: PlayerRound) {
 	var score = 0;
 	if (playerRound.bid !== -1 && playerRound.won != -1) {
 		score = Math.abs(playerRound.bid - playerRound.won);
-		score = score === 0 ? playerRound.roundIndex * 10 : score * -1 * 10;
+		if (score === 0 && playerRound.bid > 0) score = playerRound.bid * 20;
+		else if (score === 0) score = playerRound.roundIndex * 10;
+		else score = score * -1 * 10;
 	}
 
-	if (score > 0 && playerRound.bonus > 0) score = score + playerRound.bonus;
+	if (score > 0 && playerRound.bonus > 0) score += playerRound.bonus;
 
-	return score + playerRound.previousRoundTotal;
+	return score;
 }
 
 export const roundsSlice = createSlice({
@@ -53,29 +55,11 @@ export const roundsSlice = createSlice({
 			var update = action.payload;
 			state.rounds[update.roundIndex].playerRounds[update.playerIndex].bid =
 				update.value;
-			var total = getTotal(
-				state.rounds[update.roundIndex].playerRounds[update.playerIndex]
-			);
-			state.rounds[update.roundIndex].playerRounds[update.playerIndex].total =
-				total;
-			if (update.roundIndex < 8)
-				state.rounds[update.roundIndex + 1].playerRounds[
-					update.playerIndex
-				].previousRoundTotal = total;
 		},
 		updatePlayerRoundWon: (state, action: PayloadAction<PlayerRoundUpdate>) => {
 			var update = action.payload;
 			state.rounds[update.roundIndex].playerRounds[update.playerIndex].won =
 				update.value;
-			var total = getTotal(
-				state.rounds[update.roundIndex].playerRounds[update.playerIndex]
-			);
-			state.rounds[update.roundIndex].playerRounds[update.playerIndex].total =
-				total;
-			if (update.roundIndex < 8)
-				state.rounds[update.roundIndex + 1].playerRounds[
-					update.playerIndex
-				].previousRoundTotal = total;
 		},
 		updatePlayerRoundBonus: (
 			state,
@@ -84,15 +68,23 @@ export const roundsSlice = createSlice({
 			var update = action.payload;
 			state.rounds[update.roundIndex].playerRounds[update.playerIndex].bonus =
 				update.value;
-			var total = getTotal(
-				state.rounds[update.roundIndex].playerRounds[update.playerIndex]
-			);
-			state.rounds[update.roundIndex].playerRounds[update.playerIndex].total =
-				total;
-			if (update.roundIndex < 8)
-				state.rounds[update.roundIndex + 1].playerRounds[
-					update.playerIndex
-				].previousRoundTotal = total;
+		},
+		updatePlayerRoundTotals: (
+			state,
+			action: PayloadAction<PlayerRoundUpdate>
+		) => {
+			var update = action.payload;
+			for (var i = update.roundIndex; i < 10; ++i) {
+				var previousRoundTotal =
+					update.roundIndex > 0
+						? state.rounds[i - 1].playerRounds[update.playerIndex].total
+						: 0;
+				var roundTotal = getRoundTotal(
+					state.rounds[i].playerRounds[update.playerIndex]
+				);
+				var total = roundTotal + previousRoundTotal;
+				state.rounds[i].playerRounds[update.playerIndex].total = total;
+			}
 		},
 	},
 });
@@ -102,6 +94,7 @@ export const {
 	updatePlayerRoundBid,
 	updatePlayerRoundWon,
 	updatePlayerRoundBonus,
+	updatePlayerRoundTotals,
 } = roundsSlice.actions;
 
 export const roundsState = (state: StoreState) => state.rounds.rounds;

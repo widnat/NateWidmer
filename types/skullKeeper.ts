@@ -29,5 +29,4 @@ export interface PlayerRound {
 	won: number;
 	bonus: number;
 	total: number;
-	previousRoundTotal: number;
 }
