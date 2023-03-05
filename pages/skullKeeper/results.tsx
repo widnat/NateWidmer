@@ -14,7 +14,8 @@ export default function Results() {
 	const title = "Results";
 	const round = useStoreSelector(roundsState)[roundIndex];
 	var playerRounds = new Array<PlayerRound>();
-	round.playerRounds.forEach((playerRound) => playerRounds.push(playerRound));
+	if (round.playerRounds)
+		round.playerRounds.forEach((playerRound) => playerRounds.push(playerRound));
 	const players = useStoreSelector(playersState);
 	const sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
 		getPlayer(playerRound1, playerRound2)
