@@ -10,15 +10,6 @@ type Props = {
 
 export default function PlayerResult({ player, playerRound }: Props) {
 	return (
-		<div className="flex-col mx-2 mb-2">
-			<label className="uppercase tracking-wide text-gray-700 text-xs font-bold">
-				{player.name}
-			</label>
-			<form className="flex-row">
-				<div className="flex">
-					<ShortDisplay title="Total" value={playerRound.total} />
-				</div>
-			</form>
-		</div>
+		<ShortDisplay title={player.name} value={playerRound.total} />
 	);
 }

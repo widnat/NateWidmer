@@ -36,35 +36,9 @@ export default function Results() {
 		return playerRound2.total;
 	}
 
-	// function getSortedPlayerRounds() {
-	// 	var sortedPlayerRounds = [];
-	// 	const playerRounds = round.playerRounds;
-	// 	for (var i = 0; i < playerRounds.length; ++i) {
-	// 		var nextPlayerRound = {
-	// 			total: -1000,
-	// 		} as PlayerRound;
-	// 		playerRounds.forEach((playerRound) => {
-	// 			if (playerRound.total > nextPlayerRound.total) {
-	// 				nextPlayerRound = playerRound;
-	// 			}
-	// 		});
-	// 		sortedPlayerRounds.push(nextPlayerRound);
-	// 	}
-
-	// 	return sortedPlayerRounds;
-	// }
-
 	function handleNavigate(route: string) {
-		if (route === "players") router.push("/skullKeeper/players");
-		else if (route === "previous") router.push("/skullKeeper/round/10");
-		else if (route === "new game") {
-			var numPlayers = 0;
-			players.forEach((player: Player) => {
-				if (player.name) ++numPlayers;
-			});
-			dispatch(createRounds(numPlayers));
-			router.push("/skullKeeper/round/1");
-		}
+		if (route === "previous") router.push("/skullKeeper/round/10");
+		else if (route === "new game") router.push("/skullKeeper/players");
 	}
 
 	return (
@@ -77,9 +51,7 @@ export default function Results() {
 				handleNavigate={handleNavigate}
 			/>
 			<div className="flex justify-center">
-				<div className="flex justify-center lg:max-w-5xl sm:max-w-xs">
-					<div className="flex flex-wrap justify-start">{playerResults}</div>
-				</div>
+				<div className="flex-col">{playerResults}</div>
 			</div>
 		</div>
 	);

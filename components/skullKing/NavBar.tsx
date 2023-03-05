@@ -22,12 +22,12 @@ export default function NavBar({ page, round, handleNavigate }: Props) {
 						)}
 						{page !== "Players" && (
 							<NavBtn
-								route="players"
-								text="Players"
+								route="new game"
+								text="New Game"
 								handleNavigate={handleNavigate}
 							/>
 						)}
-						{page !== "Players" && page !== "Round 1" && (
+						{page !== "Players" && page !== "Round 1" && page !== "Results" && (
 							<NavBtn
 								route="previous"
 								text={"Round " + String(round - 1)}
@@ -52,8 +52,8 @@ export default function NavBar({ page, round, handleNavigate }: Props) {
 						)}
 						{page === "Results" && (
 							<NavBtn
-								route="new game"
-								text="New Game"
+								route="previous"
+								text={"Round 10"}
 								handleNavigate={handleNavigate}
 							/>
 						)}
