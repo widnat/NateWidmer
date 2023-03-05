@@ -19,15 +19,17 @@ export default function Results() {
 	// const sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
 	// 	getPlayer(playerRound1, playerRound2)
 	// );
-	// const playerResults = round.playerRounds.map((playerRound: PlayerRound) => {
-	// 	return (
-	// 		<PlayerResult
-	// 			key={playerRound.playerIndex}
-	// 			player={players[playerRound.playerIndex]}
-	// 			playerRound={playerRound}
-	// 		/>
-	// 	);
-	// });
+	const playerResults = round.playerRounds
+		? round.playerRounds.map((playerRound: PlayerRound) => {
+				return (
+					<PlayerResult
+						key={playerRound.playerIndex}
+						player={players[playerRound.playerIndex]}
+						playerRound={playerRound}
+					/>
+				);
+		  })
+		: [];
 
 	function getPlayer(playerRound1: PlayerRound, playerRound2: PlayerRound) {
 		if (playerRound1.total > playerRound2.total) return -1;
@@ -50,7 +52,7 @@ export default function Results() {
 				handleNavigate={handleNavigate}
 			/>
 			<div className="flex justify-center">
-				{/* <div className="flex-col">{playerResults}</div> */}
+				<div className="flex-col">{playerResults}</div>
 			</div>
 		</div>
 	);
