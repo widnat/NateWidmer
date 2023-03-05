@@ -2,11 +2,11 @@ import NavBar from "../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../components/skullKing/NavBar";
 import Title from "../../components/skullKing/Title";
 import PlayerResult from "../../components/skullKing/PlayerResult";
-import { useStoreDispatch, useStoreSelector } from "../../store/hooks";
-import { roundsState, createRounds } from "../../store/skullKeeper/roundsSlice";
+import { useStoreSelector } from "../../store/hooks";
+import { roundsState } from "../../store/skullKeeper/roundsSlice";
 import { playersState } from "../../store/skullKeeper/playersSlice";
 import { useRouter } from "next/router";
-import { Player, PlayerRound } from "../../types/skullKeeper";
+import { PlayerRound } from "../../types/skullKeeper";
 
 export default function Results() {
 	const router = useRouter();
@@ -19,7 +19,6 @@ export default function Results() {
 	const sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
 		getPlayer(playerRound1, playerRound2)
 	);
-	const dispatch = useStoreDispatch();
 	const playerResults = sortedPlayerRounds.map((playerRound: PlayerRound) => {
 		return (
 			<PlayerResult

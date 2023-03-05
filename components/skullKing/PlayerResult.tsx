@@ -1,6 +1,5 @@
 import React from "react";
 import ShortDisplay from "./ShortDisplay";
-import { useStoreDispatch, useStoreSelector } from "../../store/hooks";
 import { Player, PlayerRound } from "../../types/skullKeeper";
 
 type Props = {
