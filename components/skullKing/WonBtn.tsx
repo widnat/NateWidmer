@@ -6,17 +6,16 @@ import NumberBtn from "./NumberBtn";
 import { PlayerRoundUpdate } from "../../types/skullKeeper";
 
 type Props = {
-	roundIndex: number;
 	player: Player;
 	playerRound: PlayerRound;
 };
 
-export default function WonBtn({ roundIndex, player, playerRound }: Props) {
+export default function WonBtn({ player, playerRound }: Props) {
 	const dispatch = useStoreDispatch();
 	const [showPopup, setShowPopup] = useState(false);
-	const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+	const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 	const numberButtons = numbers.map((i) => {
-		if (i < roundIndex + 2)
+		if (i < playerRound.roundIndex + 1)
 			return (
 				<NumberBtn
 					key={i}
@@ -29,7 +28,7 @@ export default function WonBtn({ roundIndex, player, playerRound }: Props) {
 	function handleWonChanged(won: number) {
 		dispatch(
 			updatePlayerRoundWon({
-				roundIndex: roundIndex,
+				roundIndex: playerRound.roundIndex,
 				playerIndex: player.index,
 				value: won,
 			} as PlayerRoundUpdate)

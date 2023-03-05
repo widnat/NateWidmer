@@ -24,8 +24,10 @@ export interface PlayerRoundUpdate {
 
 export interface PlayerRound {
 	playerIndex: number;
+	roundIndex: number;
 	bid: number;
 	won: number;
 	bonus: number;
 	total: number;
+	previousRoundTotal: number;
 }

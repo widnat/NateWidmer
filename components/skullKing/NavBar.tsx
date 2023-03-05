@@ -50,6 +50,13 @@ export default function NavBar({ page, round, handleNavigate }: Props) {
 								handleNavigate={handleNavigate}
 							/>
 						)}
+						{page === "Results" && (
+							<NavBtn
+								route="new game"
+								text="New Game"
+								handleNavigate={handleNavigate}
+							/>
+						)}
 					</div>
 				</div>
 			</div>

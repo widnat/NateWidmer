@@ -1,25 +1,18 @@
-import { useState, useEffect } from "react";
 import NavBar from "../../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../../components/skullKing/NavBar";
 import Title from "../../../components/skullKing/Title";
 import PlayerInfo from "../../../components/skullKing/PlayerInfo";
-import { useStoreDispatch, useStoreSelector } from "../../../store/hooks";
+import { useStoreSelector } from "../../../store/hooks";
 import { roundsState } from "../../../store/skullKeeper/roundsSlice";
 import { playersState } from "../../../store/skullKeeper/playersSlice";
-import type { Player, PlayerRound } from "../../../types/skullKeeper";
 import { useRouter } from "next/router";
 
 export default function SkullKeeper() {
 	const router = useRouter();
 	const roundIndex = Number(router.query.index);
 	const title = "Round " + roundIndex;
-	const dispatch = useStoreDispatch();
 	const players = useStoreSelector(playersState);
 	const round = useStoreSelector(roundsState)[roundIndex];
-	const previousRoute = "/skullKeeper/round[" + String(roundIndex - 1) + "]";
-	const nextRoute = "/skullKeeper/round/1";
-	const playersRoute = "/skullKeeper/players";
-	const resultsRoute = "/skullKeeper/results";
 	const playerInfoList = players.map((player) => {
 		if (player.name)
 			return (
@@ -32,12 +25,12 @@ export default function SkullKeeper() {
 	});
 
 	function handleNavigate(route: string) {
-		// var numPlayers = 0;
-		// players.forEach((player: Player) => {
-		// 	if (player.name) ++numPlayers;
-		// });
-		// dispatch(createRounds(numPlayers));
-		// router.push("/skullKeeper/round/1");
+		if (route === "players") router.push("/skullKeeper/players");
+		else if (route === "previous")
+			router.push("/skullKeeper/round/" + Number(roundIndex - 1));
+		else if (route === "next")
+			router.push("/skullKeeper/round/" + Number(roundIndex + 1));
+		else if (route === "results") router.push("/skullKeeper/results");
 	}
 
 	return (

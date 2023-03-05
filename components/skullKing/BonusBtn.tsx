@@ -6,19 +6,18 @@ import NumberBtn from "./NumberBtn";
 import { PlayerRoundUpdate } from "../../types/skullKeeper";
 
 type Props = {
-	roundIndex: number;
 	player: Player;
 	playerRound: PlayerRound;
 };
 
-export default function BonusBtn({ roundIndex, player, playerRound }: Props) {
+export default function BonusBtn({ player, playerRound }: Props) {
 	const dispatch = useStoreDispatch();
 	const [showPopup, setShowPopup] = useState(false);
 
 	function handleBonusChanged(bonus: number) {
 		dispatch(
 			updatePlayerRoundBonus({
-				roundIndex: roundIndex,
+				roundIndex: playerRound.roundIndex,
 				playerIndex: player.index,
 				value: bonus,
 			} as PlayerRoundUpdate)
