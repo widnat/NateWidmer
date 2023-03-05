@@ -13,14 +13,13 @@ export default function Results() {
 	const roundIndex = 9;
 	const title = "Results";
 	const round = useStoreSelector(roundsState)[roundIndex];
-	var playerRounds = new Array<PlayerRound>();
-	if (round.playerRounds)
-		round.playerRounds.forEach((playerRound) => playerRounds.push(playerRound));
+	// var playerRounds = new Array<PlayerRound>();
+	// round.playerRounds.forEach((playerRound) => playerRounds.push(playerRound));
 	const players = useStoreSelector(playersState);
-	const sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
-		getPlayer(playerRound1, playerRound2)
-	);
-	const playerResults = sortedPlayerRounds.map((playerRound: PlayerRound) => {
+	// const sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
+	// 	getPlayer(playerRound1, playerRound2)
+	// );
+	const playerResults = round.playerRounds.map((playerRound: PlayerRound) => {
 		return (
 			<PlayerResult
 				key={playerRound.playerIndex}
