@@ -11,8 +11,9 @@ import { useRouter } from "next/router";
 export default function SkullKeeper() {
 	const router = useRouter();
 	const [showPopup, setShowPopup] = useState(false);
-	const roundIndex = Number(router.query.index);
-	const title = "Round " + roundIndex;
+	const roundNumber = Number(router.query.index);
+	const roundIndex = roundNumber - 1;
+	const title = "Round " + roundNumber;
 	const players = useStoreSelector(playersState);
 	const round = useStoreSelector(roundsState)[roundIndex];
 	const playerInfoList = players.map((player) => {
@@ -29,10 +30,10 @@ export default function SkullKeeper() {
 	function handleNavigate(route: string) {
 		if (route === "new game") setShowPopup(true);
 		else if (route === "previous")
-			router.push("/skullKeeper/round/" + Number(roundIndex - 1));
-		else if (route === "next")
-			router.push("/skullKeeper/round/" + Number(roundIndex + 1));
-		else if (route === "results") router.push("/skullKeeper/results");
+			router.push("/skullKeeper/round/" + Number(roundNumber - 1));
+		else if (route === "next") {
+			router.push("/skullKeeper/round/" + Number(roundNumber + 1));
+		} else if (route === "results") router.push("/skullKeeper/results");
 	}
 
 	return (
@@ -41,7 +42,7 @@ export default function SkullKeeper() {
 			<Title title="Skull Keeper" page={title} />
 			<SkullKeeperNavBar
 				page={title}
-				round={roundIndex}
+				roundIndex={roundNumber}
 				handleNavigate={handleNavigate}
 			/>
 			<div className="flex justify-center">

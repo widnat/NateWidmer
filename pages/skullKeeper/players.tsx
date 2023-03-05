@@ -15,7 +15,7 @@ export default function SkullKeeper() {
 	const playerInputs = players.map((player: Player) => {
 		return <PlayerNameInput key={player.index} player={player} />;
 	});
-	
+
 	function handleNavigate(route: string) {
 		var numPlayers = 0;
 		players.forEach((player: Player) => {
@@ -31,7 +31,7 @@ export default function SkullKeeper() {
 			<Title title="Skull Keeper" page="Players" />
 			<SkullKeeperNavBar
 				page="Players"
-				round={0}
+				roundIndex={0}
 				handleNavigate={handleNavigate}
 			/>
 			<form className="flex justify-center">

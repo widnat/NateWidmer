@@ -3,11 +3,15 @@ import NavBtn from "./NavBtn";
 
 type Props = {
 	page: string;
-	round: number;
+	roundIndex: number;
 	handleNavigate: any;
 };
 
-export default function NavBar({ page, round, handleNavigate }: Props) {
+export default function NavBar({
+	page,
+	roundIndex,
+	handleNavigate,
+}: Props) {
 	return (
 		<nav>
 			<div className="mx-auto px-2 mb-2 sm:px-6 lg:px-8">
@@ -30,7 +34,7 @@ export default function NavBar({ page, round, handleNavigate }: Props) {
 						{page !== "Players" && page !== "Round 1" && page !== "Results" && (
 							<NavBtn
 								route="previous"
-								text={"Round " + String(round - 1)}
+								text={"Round " + String(roundIndex - 1)}
 								handleNavigate={handleNavigate}
 							/>
 						)}
@@ -39,7 +43,7 @@ export default function NavBar({ page, round, handleNavigate }: Props) {
 							page !== "Results" && (
 								<NavBtn
 									route="next"
-									text={"Round " + String(round + 1)}
+									text={"Round " + String(roundIndex + 1)}
 									handleNavigate={handleNavigate}
 								/>
 							)}

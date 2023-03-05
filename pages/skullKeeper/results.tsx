@@ -47,7 +47,7 @@ export default function Results() {
 			<Title title="Skull Keeper" page={title} />
 			<SkullKeeperNavBar
 				page={title}
-				round={roundIndex}
+				roundIndex={roundIndex}
 				handleNavigate={handleNavigate}
 			/>
 			<div className="flex justify-center">

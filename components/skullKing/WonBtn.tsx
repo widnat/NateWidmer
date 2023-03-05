@@ -18,7 +18,7 @@ export default function WonBtn({ player, playerRound }: Props) {
 	const [showPopup, setShowPopup] = useState(false);
 	const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 	const numberButtons = numbers.map((i) => {
-		if (i < playerRound.roundIndex + 1)
+		if (i < playerRound.roundIndex + 2)
 			return (
 				<NumberBtn
 					key={i}
