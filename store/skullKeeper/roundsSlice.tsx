@@ -16,7 +16,7 @@ function getRoundTotal(playerRound: PlayerRound) {
 	if (playerRound.bid !== -1 && playerRound.won != -1) {
 		score = Math.abs(playerRound.bid - playerRound.won);
 		if (score === 0 && playerRound.bid > 0) score = playerRound.bid * 20;
-		else if (score === 0) score = playerRound.roundIndex * 10;
+		else if (score === 0) score = (playerRound.roundIndex + 1) * 10;
 		else score = score * -1 * 10;
 	}
 
@@ -76,13 +76,15 @@ export const roundsSlice = createSlice({
 			var update = action.payload;
 			for (var i = update.roundIndex; i < 10; ++i) {
 				var previousRoundTotal =
-					update.roundIndex > 0
+					i > 0
 						? state.rounds[i - 1].playerRounds[update.playerIndex].total
 						: 0;
 				var roundTotal = getRoundTotal(
 					state.rounds[i].playerRounds[update.playerIndex]
 				);
 				var total = roundTotal + previousRoundTotal;
+				var s = "prev: " + previousRoundTotal + ", total: " + total;
+				console.log(s);
 				state.rounds[i].playerRounds[update.playerIndex].total = total;
 			}
 		},

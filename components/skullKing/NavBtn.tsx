@@ -10,7 +10,7 @@ export default function NavBtn({ route, text, handleNavigate }: Props) {
 	return (
 		<a
 			onClick={() => handleNavigate(route)}
-			className="text-white bg-teal-600 shadow-lg hover:shadow-none hover:cursor-pointer duration-500 hover:text-teal-600 hover:bg-white hover:border-teal-600 px-3 py-2 rounded-md text-sm font-medium no-underline"
+			className="text-white bg-teal-600 duration-500 shadow-lg hover:cursor-pointer hover:bg-teal-800 px-3 py-2 rounded-md text-sm font-medium no-underline"
 		>
 			{text}
 		</a>
