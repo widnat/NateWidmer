@@ -28,7 +28,7 @@ export default function BonusBtn({ player, playerRound }: Props) {
 	}
 
 	return (
-		<div className="w-32 mr-2">
+		<div className="mr-2">
 			<button
 				type="button"
 				onClick={() => setShowPopup(true)}

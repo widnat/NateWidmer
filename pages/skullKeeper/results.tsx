@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 
 export default function Results() {
 	const router = useRouter();
+	var componentDidMount = false;
 	const roundIndex = 9;
 	const title = "Results";
 	const round = useStoreSelector(roundsState)[roundIndex];
@@ -19,22 +20,26 @@ export default function Results() {
 	const [playerResults, setPlayerResults] = useState(new Array<JSX.Element>());
 
 	useEffect(() => {
-		round.playerRounds.forEach((playerRound) => playerRounds.push(playerRound));
-		var sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
-			getPlayer(playerRound1, playerRound2)
-		);
-		alert(sortedPlayerRounds.length);
-		setPlayerResults(
-			sortedPlayerRounds.map((playerRound: PlayerRound) => {
-				return (
-					<PlayerResult
-						key={playerRound.playerIndex}
-						player={players[playerRound.playerIndex]}
-						playerRound={playerRound}
-					/>
-				);
-			})
-		);
+		if (!componentDidMount) {
+			componentDidMount = true;
+			round.playerRounds.forEach((playerRound) =>
+				playerRounds.push(playerRound)
+			);
+			var sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
+				getPlayer(playerRound1, playerRound2)
+			);
+			setPlayerResults(
+				sortedPlayerRounds.map((playerRound: PlayerRound) => {
+					return (
+						<PlayerResult
+							key={playerRound.playerIndex}
+							player={players[playerRound.playerIndex]}
+							playerRound={playerRound}
+						/>
+					);
+				})
+			);
+		}
 	}, []);
 
 	function getPlayer(playerRound1: PlayerRound, playerRound2: PlayerRound) {

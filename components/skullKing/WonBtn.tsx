@@ -40,7 +40,7 @@ export default function WonBtn({ player, playerRound }: Props) {
 	}
 
 	return (
-		<div className="w-28 mr-2">
+		<div className="mr-2">
 			<button
 				type="button"
 				onClick={() => setShowPopup(true)}

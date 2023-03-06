@@ -7,6 +7,7 @@ import { playersState } from "../../store/skullKeeper/playersSlice";
 import { createRounds } from "../../store/skullKeeper/roundsSlice";
 import type { Player } from "../../types/skullKeeper";
 import { useRouter } from "next/router";
+import { updatePlayer } from "../../store/skullKeeper/playersSlice";
 
 export default function SkullKeeper() {
 	const router = useRouter();
@@ -17,12 +18,30 @@ export default function SkullKeeper() {
 	});
 
 	function handleNavigate(route: string) {
+		movePlayersToTop();
 		var numPlayers = 0;
 		players.forEach((player: Player) => {
 			if (player.name) ++numPlayers;
 		});
 		dispatch(createRounds(numPlayers));
 		router.push("/skullKeeper/round/1");
+	}
+
+	function movePlayersToTop() {
+		var lastEmptyPlayerIndex = 0;
+		for (var i = 0; i < 8; ++i) {
+			if (lastEmptyPlayerIndex < i && players[i].name) {
+				dispatch(
+					updatePlayer({
+						name: players[i].name,
+						index: lastEmptyPlayerIndex,
+					} as Player)
+				);
+				dispatch(updatePlayer({ name: "", index: i } as Player));
+			}
+
+			if (players[i].name) ++lastEmptyPlayerIndex;
+		}
 	}
 
 	return (
