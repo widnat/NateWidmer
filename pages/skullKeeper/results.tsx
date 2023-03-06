@@ -7,20 +7,25 @@ import { roundsState } from "../../store/skullKeeper/roundsSlice";
 import { playersState } from "../../store/skullKeeper/playersSlice";
 import { useRouter } from "next/router";
 import { PlayerRound } from "../../types/skullKeeper";
+import { useEffect, useState } from "react";
 
 export default function Results() {
 	const router = useRouter();
 	const roundIndex = 9;
 	const title = "Results";
 	const round = useStoreSelector(roundsState)[roundIndex];
-	// var playerRounds = new Array<PlayerRound>();
-	// round.playerRounds.forEach((playerRound) => playerRounds.push(playerRound));
 	const players = useStoreSelector(playersState);
-	// const sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
-	// 	getPlayer(playerRound1, playerRound2)
-	// );
-	const playerResults = round.playerRounds
-		? round.playerRounds.map((playerRound: PlayerRound) => {
+	var playerRounds = new Array<PlayerRound>();
+	const [playerResults, setPlayerResults] = useState(new Array<JSX.Element>());
+
+	useEffect(() => {
+		round.playerRounds.forEach((playerRound) => playerRounds.push(playerRound));
+		var sortedPlayerRounds = playerRounds.sort((playerRound1, playerRound2) =>
+			getPlayer(playerRound1, playerRound2)
+		);
+		alert(sortedPlayerRounds.length);
+		setPlayerResults(
+			sortedPlayerRounds.map((playerRound: PlayerRound) => {
 				return (
 					<PlayerResult
 						key={playerRound.playerIndex}
@@ -28,8 +33,9 @@ export default function Results() {
 						playerRound={playerRound}
 					/>
 				);
-		  })
-		: [];
+			})
+		);
+	}, []);
 
 	function getPlayer(playerRound1: PlayerRound, playerRound2: PlayerRound) {
 		if (playerRound1.total > playerRound2.total) return -1;
