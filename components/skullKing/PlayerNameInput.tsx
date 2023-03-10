@@ -1,6 +1,6 @@
 import React from "react";
 import { Player } from "../../types/skullKeeper";
-import { useStoreDispatch } from "../../store/hooks";
+import { useStoreDispatch } from "../../hooks/skullKing";
 import { updatePlayer } from "../../store/skullKeeper/playersSlice";
 
 type Props = {

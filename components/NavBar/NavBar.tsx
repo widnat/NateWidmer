@@ -23,6 +23,7 @@ export default function NavBar() {
 								<HrefBtn route="#" text="Memoizit" />
 								<HrefBtn route="/skullKeeper/players" text="skull Keeper" />
 								<HrefBtn route="/calculator/calculator" text="Calculator" />
+								<HrefBtn route="/doodler" text="Doodler" />
 							</div>
 						</div>
 					</div>
@@ -39,6 +40,7 @@ export default function NavBar() {
 						<MobileHrefBtn route="#" text="Memoizit" />
 						<MobileHrefBtn route="/skullKeeper/players" text="skull Keeper" />
 						<MobileHrefBtn route="/calculator/calculator" text="Calculator" />
+						<MobileHrefBtn route="/doodler" text="Doodler" />
 					</div>
 				</div>
 			)}
