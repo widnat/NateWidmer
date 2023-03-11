@@ -1,13 +1,4 @@
-"use client";
-
-import {
-	FC,
-	SetStateAction,
-	useState,
-	useRef,
-	useEffect,
-	useLayoutEffect,
-} from "react";
+import { useState, useRef, useEffect } from "react";
 import { Point } from "@/types/doodler";
 import { Draw } from "@/types/doodler";
 import { useDraw } from "@/hooks/doodler";
@@ -20,7 +11,12 @@ export default function DrawingArea() {
 		_setColor(newColor);
 	};
 	const { canvasRef, onMouseDown, clear } = useDraw(drawLine);
-	const [lineWidth, setLineWidth] = useState(5);
+	const [lineWidth, _setLineWidth] = useState(5);
+	const lineWidthRef = useRef(lineWidth);
+	const setLineWidth = (newLineWidth: number) => {
+		lineWidthRef.current = newLineWidth;
+		_setLineWidth(newLineWidth);
+	};
 	const [canvasWidth, setCanvasWidth] = useState(50);
 	const [canvasHeight, setCanvasHeight] = useState(50);
 	var canvasTop = 0;
@@ -33,7 +29,7 @@ export default function DrawingArea() {
 
 		let startPoint = prevPoint ?? currentPoint;
 		ctx.beginPath();
-		ctx.lineWidth = lineWidth;
+		ctx.lineWidth = lineWidthRef.current;
 		ctx.strokeStyle = lineColor;
 		ctx.moveTo(startPoint.x, startPoint.y);
 		ctx.lineTo(currX, currY);
