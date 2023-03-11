@@ -8,6 +8,7 @@ import {
 	useEffect,
 	useLayoutEffect,
 } from "react";
+import { Point } from "@/types/doodler";
 import { Draw } from "@/types/doodler";
 import { useDraw } from "@/hooks/doodler";
 
@@ -17,6 +18,9 @@ export default function DrawingArea() {
 	const [lineWidth, setLineWidth] = useState(5);
 	const [canvasWidth, setCanvasWidth] = useState(50);
 	const [canvasHeight, setCanvasHeight] = useState(50);
+	var canvasTop = 0;
+	var lastx = 0;
+	var lasty = 0;
 
 	function drawLine({ prevPoint, currentPoint, ctx }: Draw) {
 		const { x: currX, y: currY } = currentPoint;
@@ -42,7 +46,43 @@ export default function DrawingArea() {
 	}
 
 	useEffect(() => {
+		var top = canvasRef.current?.offsetTop;
+		canvasTop = top ? top : 0;
 		handleResize();
+		canvasRef.current?.addEventListener("touchstart", (e) => {
+			e.preventDefault();
+			lastx = e.touches[0].clientX;
+			lasty = e.touches[0].clientY - canvasTop;
+			var lastPoint = {
+				x: lastx,
+				y: lasty,
+			} as Point;
+			drawLine({
+				prevPoint: lastPoint,
+				currentPoint: lastPoint,
+				ctx: canvasRef.current?.getContext("2d"),
+			} as Draw);
+		});
+		canvasRef.current?.addEventListener("touchmove", (e) => {
+			e.preventDefault();
+			var newx = e.touches[0].clientX;
+			var newy = e.touches[0].clientY - canvasTop;
+			var lastPoint = {
+				x: lastx,
+				y: lasty,
+			} as Point;
+			var currentPoint = {
+				x: newx,
+				y: newy,
+			} as Point;
+			drawLine({
+				prevPoint: lastPoint,
+				currentPoint: currentPoint,
+				ctx: canvasRef.current?.getContext("2d"),
+			} as Draw);
+			lastx = newx;
+			lasty = newy;
+		});
 	}, []);
 
 	return (
@@ -73,31 +113,31 @@ export default function DrawingArea() {
 					</div>
 					<div className="flex self-stretch justify-center my-5">
 						<div
-							onClick={() => alert("hey")}
+							onClick={() => setColor("red")}
 							className="font-bold mx-3 text-gray-700 rounded-full bg-red-500 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
-							onClick={() => alert("hey")}
+							onClick={() => setColor("orange")}
 							className="font-bold mx-3 text-gray-700 rounded-full bg-orange-400 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
-							onClick={() => alert("hey")}
+							onClick={() => setColor("yellow")}
 							className="font-bold mx-3 text-gray-700 rounded-full bg-yellow-300 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
-							onClick={() => alert("hey")}
+							onClick={() => setColor("green")}
 							className="font-bold mx-3 text-gray-700 rounded-full bg-green-400 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
-							onClick={() => alert("hey")}
+							onClick={() => setColor("blue")}
 							className="font-bold mx-3 text-gray-700 rounded-full bg-blue-400 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
-							onClick={() => alert("hey")}
+							onClick={() => setColor("brown")}
 							className="font-bold mx-3 text-gray-700 rounded-full bg-orange-800 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
-							onClick={() => alert("hey")}
+							onClick={() => setColor("black")}
 							className="font-bold mx-3 text-gray-700 rounded-full bg-black flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 					</div>

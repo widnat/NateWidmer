@@ -13,7 +13,7 @@ export default function SkullKeeper() {
 	return (
 		<div>
 			<NavBar />
-			<Title title="Doodler" page="Home" />
+			<Title title="Doodler" page="" />
 			<DrawingArea />
 		</div>
 	);
