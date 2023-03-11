@@ -13,7 +13,12 @@ import { Draw } from "@/types/doodler";
 import { useDraw } from "@/hooks/doodler";
 
 export default function DrawingArea() {
-	const [color, setColor] = useState<string>("black");
+	const [color, _setColor] = useState<string>("black");
+	const colorRef = useRef(color);
+	const setColor = (newColor: string) => {
+		colorRef.current = newColor;
+		_setColor(newColor);
+	};
 	const { canvasRef, onMouseDown, clear } = useDraw(drawLine);
 	const [lineWidth, setLineWidth] = useState(5);
 	const [canvasWidth, setCanvasWidth] = useState(50);
@@ -24,7 +29,7 @@ export default function DrawingArea() {
 
 	function drawLine({ prevPoint, currentPoint, ctx }: Draw) {
 		const { x: currX, y: currY } = currentPoint;
-		const lineColor = color;
+		const lineColor = colorRef.current;
 
 		let startPoint = prevPoint ?? currentPoint;
 		ctx.beginPath();
@@ -41,8 +46,8 @@ export default function DrawingArea() {
 	}
 
 	function handleResize() {
-		setCanvasWidth(window.innerWidth / 2);
-		setCanvasHeight(window.innerWidth / 2);
+		setCanvasWidth(window.innerWidth * 0.7);
+		setCanvasHeight(window.innerWidth * 0.7);
 	}
 
 	useEffect(() => {
