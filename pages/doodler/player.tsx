@@ -3,20 +3,20 @@ import Title from "../../components/skullKing/Title";
 import { useStoreDispatch, useStoreSelector } from "../../hooks/store";
 import { doodlerState } from "../../store/doodler/doodlerSlice";
 import { useRouter } from "next/router";
+import DrawingArea from "@/components/doodler/DrawingArea";
 import { useEffect, useState } from "react";
-import { Player } from "../../types/doodler";
+let webSocket: WebSocket;
 
 export default function Doodler() {
 	const router = useRouter();
 	const dispatch = useStoreDispatch();
-	const playersState = useStoreSelector(doodlerState).players;
-	const webSocket = useStoreSelector(doodlerState).webSocket;
+	const game = useStoreSelector(doodlerState);
+	const [input, setInput] = useState("");
 	var hasConstructed = false;
-	const [players, setPlayers] = useState(new Array<JSX.Element>());
-
 	useEffect(() => {
 		if (!hasConstructed) {
 			hasConstructed = true;
+			webSocket = new WebSocket("ws://localhost:8080");
 			webSocket.onerror = (err) => console.error(err);
 			webSocket.onopen = () => console.log("open");
 			webSocket.onmessage = (msg) => console.log(msg.data);
@@ -24,23 +24,15 @@ export default function Doodler() {
 		}
 	}, []);
 
-	useEffect(() => {
-		var updatedPlayers = playersState.map((player: Player) => {
-			return <div>hey</div>;
-		});
-		setPlayers(updatedPlayers);
-	}, [playersState]);
-
 	return (
 		<div>
 			<NavBar />
 			<Title title="Doodler" page="" />
-			<div className="flex self-stretch w-screen justify-center">
-				<div className="flex-col">
-					<div>Add player by entering this url in a browser</div>
-					<div>http://localhost:3000/add_player</div>
-				</div>
-				{players}
+			<DrawingArea />
+			<div>
+				the initial screen will show a url or something for users to join when a
+				player joins their picture they drew shows up with their className start
+				game button
 			</div>
 		</div>
 	);

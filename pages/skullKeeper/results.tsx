@@ -2,7 +2,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../components/skullKing/NavBar";
 import Title from "../../components/skullKing/Title";
 import PlayerResult from "../../components/skullKing/PlayerResult";
-import { useStoreSelector } from "../../hooks/skullKing";
+import { useStoreSelector } from "../../hooks/store";
 import { roundsState } from "../../store/skullKeeper/roundsSlice";
 import { playersState } from "../../store/skullKeeper/playersSlice";
 import { useRouter } from "next/router";

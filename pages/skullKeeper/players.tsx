@@ -2,7 +2,7 @@ import NavBar from "../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../components/skullKing/NavBar";
 import Title from "../../components/skullKing/Title";
 import PlayerNameInput from "../../components/skullKing/PlayerNameInput";
-import { useStoreDispatch, useStoreSelector } from "../../hooks/skullKing";
+import { useStoreDispatch, useStoreSelector } from "../../hooks/store";
 import { playersState } from "../../store/skullKeeper/playersSlice";
 import { createRounds } from "../../store/skullKeeper/roundsSlice";
 import type { Player } from "../../types/skullKeeper";

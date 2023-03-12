@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Player, PlayerRound } from "../../types/skullKeeper";
-import { useStoreDispatch } from "../../hooks/skullKing";
+import { useStoreDispatch } from "../../hooks/store";
 import {
 	updatePlayerRoundBonus,
 	updatePlayerRoundTotals,
