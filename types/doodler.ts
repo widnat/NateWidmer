@@ -1,25 +1,34 @@
-export interface Game {
-    webSocket: WebSocket;
+export type Game = {
     players: Array<Player>;
 }
 
-export interface Message {
+export type Message = {
     type: string;
     value: string;
 }
 
-export interface Draw {
+export type Connection = {
+    webSocketType: string;
+    gameIndex: number;
+}
+
+export type AddPlayerUpdate = {
+    name: string;
+    imageUrl: string;
+}
+
+export type Draw = {
     ctx: CanvasRenderingContext2D
     currentPoint: Point
     prevPoint: Point | null
 }
 
-export interface Point {
+export type Point = {
 	x: number;
 	y: number;
 }
 
-export interface Player {
+export type Player = {
     index: number;
 	name: string;
     pictureURL: string;

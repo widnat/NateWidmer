@@ -3,7 +3,6 @@ import type { StoreState } from "../store";
 import type { Game, Player } from "../../types/doodler";
 
 const initialState: Game = {
-	webSocket: new WebSocket("ws://localhost:8080"),
 	players: [],
 };
 
@@ -27,6 +26,8 @@ export const doodlerSlice = createSlice({
 		},
 	},
 });
+
+export const { addPlayer, updatePlayer } = doodlerSlice.actions;
 
 export const doodlerState = (state: StoreState) => state.game;
 
