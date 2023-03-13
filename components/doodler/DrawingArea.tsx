@@ -4,8 +4,12 @@ import { Point } from "@/types/doodler";
 import { Draw } from "@/types/doodler";
 import { useDraw } from "@/hooks/doodler";
 
-export default function DrawingArea() {
-	const [doodleUrlData, setDoodleUrlData] = useState("");
+type Props = {
+	action: any;
+	actionText: string;
+};
+
+export default function DrawingArea({ action, actionText }: Props) {
 	const [color, _setColor] = useState<string>("black");
 	const colorRef = useRef(color);
 	const setColor = (newColor: string) => {
@@ -89,8 +93,8 @@ export default function DrawingArea() {
 	}, []);
 
 	function submit() {
-		var s = canvasRef.current?.toDataURL();
-		setDoodleUrlData(s ? s : "");
+		var doodleURL = canvasRef.current?.toDataURL();
+		action(doodleURL);
 	}
 
 	return (
@@ -149,15 +153,13 @@ export default function DrawingArea() {
 							className="font-bold mx-3 text-gray-700 rounded-full bg-black flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 					</div>
-					<img src={doodleUrlData} width={200}
-					height={200}/>
 					<div className="flex self-stretch justify-center">
 						<button
 							type="button"
 							className="p-2 mr-10 rounded-md border border-black"
 							onClick={submit}
 						>
-							Submit Drawing
+							[actionText]
 						</button>
 						<button
 							type="button"

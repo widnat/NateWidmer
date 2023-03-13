@@ -1,10 +1,10 @@
 import NavBar from "../../components/NavBar/NavBar";
 import Title from "../../components/skullKing/Title";
 import { useStoreDispatch, useStoreSelector } from "../../hooks/store";
-import { doodlerState } from "../../store/doodler/doodlerSlice";
+import { doodlerState, addPlayer } from "../../store/doodler/doodlerSlice";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Player, Message, Connection } from "../../types/doodler";
+import { Message, AddPlayerMessage, Player } from "../../types/doodler";
 
 export default function Doodler() {
 	const router = useRouter();
@@ -21,7 +21,6 @@ export default function Doodler() {
 			webSocket = new WebSocket("ws://localhost:8080", "presenter");
 			webSocket.onerror = (err) => console.error(err);
 			webSocket.onmessage = (msg: any) => handleServerMessage(msg.data);
-			// webSocket.onmessage = (msg) => console.log(JSON.parse(msg.data));
 		}
 	}, []);
 
@@ -29,16 +28,24 @@ export default function Doodler() {
 		const message = JSON.parse(msg) as Message;
 		if (message.type === "game index") {
 			setGameIndex(Number(message.value));
+		} else if (message.type === "add player") {
+			const addPlayerMessage = JSON.parse(message.value) as AddPlayerMessage;
+			addPlayerMessage.imageUrl;
+			var newPlayer = {
+				index: playersState.length,
+				name: addPlayerMessage.name,
+				pictureURL: addPlayerMessage.imageUrl,
+				drawingURL: "",
+				score: 0,
+			} as Player;
+
+			dispatch(addPlayer(newPlayer));
 		}
-		// else if (message.type === "add player") {
-		// 	const addPlayerUpdate = JSON.parse(message.value) as AddPlayerUpdate;
-		// 	addPlayerUpdate.
-		// }
 	}
 
 	useEffect(() => {
 		var updatedPlayers = playersState.map((player) => {
-			return <div>hey</div>;
+			return <img src={player.pictureURL} width={200} height={200} />;
 		});
 		setPlayers(updatedPlayers);
 	}, [playersState]);
@@ -51,7 +58,7 @@ export default function Doodler() {
 				<div className="flex self-stretch w-screen justify-center">
 					<div className="flex-col">
 						<div>Add player by entering this url in a browser</div>
-						<div>http://localhost:3000/doodler/{gameIndex}/add_player}</div>
+						<div>http://localhost:3000/doodler/{gameIndex}/add-player</div>
 					</div>
 					{players}
 				</div>
