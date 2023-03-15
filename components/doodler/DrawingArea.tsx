@@ -118,10 +118,6 @@ export default function DrawingArea({ action, actionText }: Props) {
 							max="20"
 							step="1"
 						/>
-						<div
-							onClick={() => alert("hey")}
-							className="font-bold text-gray-700 rounded-full bg-gray-300 flex-col items-center justify-center font-mono h-6 w-6"
-						/>
 					</div>
 					<div className="flex self-stretch justify-center my-5">
 						<div
@@ -153,13 +149,13 @@ export default function DrawingArea({ action, actionText }: Props) {
 							className="font-bold mx-3 text-gray-700 rounded-full bg-black flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 					</div>
-					<div className="flex self-stretch justify-center">
+					<div className="flex self-stretch justify-center mb-7">
 						<button
 							type="button"
 							className="p-2 mr-10 rounded-md border border-black"
 							onClick={submit}
 						>
-							[actionText]
+							{actionText}
 						</button>
 						<button
 							type="button"

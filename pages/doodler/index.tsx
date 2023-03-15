@@ -45,7 +45,20 @@ export default function Doodler() {
 
 	useEffect(() => {
 		var updatedPlayers = playersState.map((player) => {
-			return <img src={player.pictureURL} width={200} height={200} />;
+			return (
+				<div className="m-3">
+					<img
+						className="border-2 rounded-md border-teal-500"
+						key={player.name}
+						src={player.pictureURL}
+						width={200}
+						height={200}
+					/>
+					<div className="flex mt-3 self-stretch justify-center text-lg text-teal-700 uppercase font-extrabold">
+						{player.name}
+					</div>
+				</div>
+			);
 		});
 		setPlayers(updatedPlayers);
 	}, [playersState]);
@@ -59,8 +72,10 @@ export default function Doodler() {
 					<div className="flex-col">
 						<div>Add player by entering this url in a browser</div>
 						<div>http://localhost:3000/doodler/{gameIndex}/add-player</div>
+						<div className="flex self-stretch justify-center max-w-7xl">
+							<div className="flex flex-wrap">{players}</div>
+						</div>
 					</div>
-					{players}
 				</div>
 			)}
 		</div>

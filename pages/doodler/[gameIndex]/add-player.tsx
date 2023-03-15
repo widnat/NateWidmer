@@ -7,6 +7,7 @@ import DrawingArea from "@/components/doodler/DrawingArea";
 import { useEffect, useState } from "react";
 import { AddPlayerMessage, Message } from "@/types/doodler";
 import PlayerNameInput from "@/components/doodler/PlayerNameInput";
+import Spinner from "@/components/Spinner";
 let webSocket: WebSocket;
 
 export default function Doodler() {
@@ -16,6 +17,7 @@ export default function Doodler() {
 	const game = useStoreSelector(doodlerState);
 	const [connected, setConnected] = useState(false);
 	const [playerName, setPlayerName] = useState("");
+	const [waiting, setWaiting] = useState(false);
 	var hasConstructed = false;
 
 	useEffect(() => {
@@ -29,6 +31,7 @@ export default function Doodler() {
 	}, []);
 
 	function handleServerMessage(msg: string) {
+		// should get message from server when game begins!!!!!!!!!!
 		// const message = JSON.parse(msg) as Message;
 		// if (message.type === "game index") {
 		// 	setGameIndex(Number(message.value));
@@ -49,19 +52,23 @@ export default function Doodler() {
 			} as Message;
 			var jsonRequest = JSON.stringify(addPlayerMessage);
 			webSocket.send(jsonRequest);
+			setWaiting(true);
 		} else alert("Please enter a name");
 	}
 
 	return (
-		<div>
-			<NavBar />
-			<Title title="Doodler" page="" />
-			{connected && (
-				<div>
-					<PlayerNameInput updateName={setPlayerName} />
-					<DrawingArea action={joinGame} actionText="Join Game" />
-				</div>
-			)}
-		</div>
+		<>
+			<div className="h-screen">
+				<NavBar />
+				<Title title="Doodler" page="" />
+				{connected && !waiting && (
+					<div>
+						<PlayerNameInput updateName={setPlayerName} />
+						<DrawingArea action={joinGame} actionText="Join Game" />
+					</div>
+				)}
+				{waiting && <Spinner message="waiting for other players to begin..." />}
+			</div>
+		</>
 	);
 }
