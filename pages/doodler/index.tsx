@@ -5,6 +5,7 @@ import { doodlerState, addPlayer } from "../../store/doodler/doodlerSlice";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Message, AddPlayerMessage, Player } from "../../types/doodler";
+import Btn from "@/components/doodler/Btn";
 
 export default function Doodler() {
 	const router = useRouter();
@@ -14,6 +15,28 @@ export default function Doodler() {
 	const [players, setPlayers] = useState(new Array<JSX.Element>());
 	const [gameIndex, setGameIndex] = useState(-1);
 	let webSocket: WebSocket;
+
+	//start game
+	//draw!
+	// timer is going
+	// timer ends
+	// next page
+	//what is it? shows an image
+	// people guess from a list of choices and get points for guess
+	// timer is going
+	// when everyone has finished the next page goes
+	// keep the image and show all the guesses
+	// give points for guesses
+	// music in background
+
+	function startGame() {
+		var response = {
+			type: "next ",
+			value: String(newGameIndex),
+		} as Message;
+		var jsonMsg = JSON.stringify(response);
+		webSocket.send(jsonMsg);
+	}
 
 	useEffect(() => {
 		if (!hasConstructed) {
@@ -69,9 +92,17 @@ export default function Doodler() {
 			<Title title="Doodler" page="" />
 			{gameIndex != -1 && (
 				<div className="flex self-stretch w-screen justify-center">
-					<div className="flex-col">
-						<div>Add player by entering this url in a browser</div>
-						<div>http://localhost:3000/doodler/{gameIndex}/add-player</div>
+					<div className="flex-col space-y-3">
+						<div className="flex self-stretch justify-center">
+							Add player by entering this url in a browser
+						</div>
+						<div className="flex self-stretch justify-center">
+							http://localhost:3000/doodler/{gameIndex}/add-player
+						</div>
+						<div className="flex self-stretch justify-center">
+							<Btn action={startGame} text="Start Game" />
+						</div>
+
 						<div className="flex self-stretch justify-center max-w-7xl">
 							<div className="flex flex-wrap">{players}</div>
 						</div>

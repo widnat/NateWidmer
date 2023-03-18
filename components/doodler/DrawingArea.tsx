@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { Point } from "@/types/doodler";
 import { Draw } from "@/types/doodler";
 import { useDraw } from "@/hooks/doodler";
+import Btn from "./Btn";
 
 type Props = {
 	action: any;
@@ -150,20 +151,9 @@ export default function DrawingArea({ action, actionText }: Props) {
 						/>
 					</div>
 					<div className="flex self-stretch justify-center mb-7">
-						<button
-							type="button"
-							className="p-2 mr-10 rounded-md border border-black"
-							onClick={submit}
-						>
-							{actionText}
-						</button>
-						<button
-							type="button"
-							className="p-2 rounded-md border border-black"
-							onClick={clear}
-						>
-							Clear canvas
-						</button>
+						<Btn action={submit} text={actionText} />
+						<div className="mx-3"></div>
+						<Btn action={clear} text="Clear canvas" />
 					</div>
 				</div>
 			</div>

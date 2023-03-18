@@ -1,7 +1,6 @@
 import Head from "next/head";
 import NavBar from "@/components/NavBar/NavBar";
 import Projects from "@/components/Projects";
-import AboutMe from "@/components/AboutMe";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Home() {
@@ -15,21 +14,6 @@ export default function Home() {
 			</Head>
 			<NavBar />
 			<div>
-				<ul className="list-decimal">
-					<li>use redux: store data in a central place</li>
-					<li>reactquery: optimizes quieries kinda like memoization</li>
-					<li>tailwindcss or materialui. probably tailwindcss</li>
-					<li>nextjs</li>
-					<li>nivo for charts</li>
-					<li>react-testing-library for integration testing</li>
-					<li>
-						better because it is closer to user experience. cypress for end to
-						end testing e2e
-					</li>
-					<li>Sentry for error help</li>
-					<li>react icons</li>
-				</ul>
-				<AboutMe />
 				<Projects />
 			</div>
 		</>
