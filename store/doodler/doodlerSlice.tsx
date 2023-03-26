@@ -22,7 +22,7 @@ export const doodlerSlice = createSlice({
 			if (!playerNameTaken) state.players.push(action.payload);
 		},
 		updatePlayer: (state, action: PayloadAction<Player>) => {
-			state.players[action.payload.index] = action.payload;
+			state.players[action.payload.id] = action.payload;
 		},
 	},
 });

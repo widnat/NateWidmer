@@ -25,9 +25,11 @@ export type Point = {
 }
 
 export type Player = {
-    index: number;
+    id: number;
 	name: string;
     pictureURL: string;
     drawingURL: string;
+    imageDescription: string;
+    acceptableGuesses: string[];
     score: number;
 }

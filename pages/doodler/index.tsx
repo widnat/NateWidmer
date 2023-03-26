@@ -1,19 +1,15 @@
-import NavBar from "../../components/NavBar/NavBar";
-import Title from "../../components/skullKing/Title";
-import { useStoreDispatch, useStoreSelector } from "../../hooks/store";
-import { doodlerState, addPlayer } from "../../store/doodler/doodlerSlice";
-import { useRouter } from "next/router";
+import { useStoreDispatch, useStoreSelector } from "@/hooks/store";
+import { doodlerState, addPlayer } from "@/store/doodler/doodlerSlice";
 import { useEffect, useState } from "react";
-import { Message, AddPlayerMessage, Player } from "../../types/doodler";
-import Btn from "@/components/doodler/Btn";
+import { Message, AddPlayerMessage, Player } from "@/types/doodler";
+import StartGame from "@/components/doodler/presenter/StartGame";
 
 export default function Doodler() {
-	const router = useRouter();
 	const dispatch = useStoreDispatch();
 	const playersState = useStoreSelector(doodlerState).players;
 	var hasConstructed = false;
-	const [players, setPlayers] = useState(new Array<JSX.Element>());
 	const [gameIndex, setGameIndex] = useState(-1);
+	const [round, setRound] = useState(0);
 	let webSocket: WebSocket;
 
 	//start game
@@ -28,15 +24,6 @@ export default function Doodler() {
 	// keep the image and show all the guesses
 	// give points for guesses
 	// music in background
-
-	function startGame() {
-		var response = {
-			type: "next ",
-			value: String(newGameIndex),
-		} as Message;
-		var jsonMsg = JSON.stringify(response);
-		webSocket.send(jsonMsg);
-	}
 
 	useEffect(() => {
 		if (!hasConstructed) {
@@ -66,49 +53,20 @@ export default function Doodler() {
 		}
 	}
 
-	useEffect(() => {
-		var updatedPlayers = playersState.map((player) => {
-			return (
-				<div className="m-3">
-					<img
-						className="border-2 rounded-md border-teal-500"
-						key={player.name}
-						src={player.pictureURL}
-						width={200}
-						height={200}
-					/>
-					<div className="flex mt-3 self-stretch justify-center text-lg text-teal-700 uppercase font-extrabold">
-						{player.name}
-					</div>
-				</div>
-			);
-		});
-		setPlayers(updatedPlayers);
-	}, [playersState]);
+	function CreateDoodles() {
+		setRound(round);
+		var msg = {
+			type: "create doodles",
+			gameIndex: gameIndex,
+			value: "",
+		} as Message;
+
+		webSocket.send();
+	}
 
 	return (
 		<div>
-			<NavBar />
-			<Title title="Doodler" page="" />
-			{gameIndex != -1 && (
-				<div className="flex self-stretch w-screen justify-center">
-					<div className="flex-col space-y-3">
-						<div className="flex self-stretch justify-center">
-							Add player by entering this url in a browser
-						</div>
-						<div className="flex self-stretch justify-center">
-							http://localhost:3000/doodler/{gameIndex}/add-player
-						</div>
-						<div className="flex self-stretch justify-center">
-							<Btn action={startGame} text="Start Game" />
-						</div>
-
-						<div className="flex self-stretch justify-center max-w-7xl">
-							<div className="flex flex-wrap">{players}</div>
-						</div>
-					</div>
-				</div>
-			)}
+			{round === 0 && <StartGame gameIndex={gameIndex} action={StartRound} />}
 		</div>
 	);
 }

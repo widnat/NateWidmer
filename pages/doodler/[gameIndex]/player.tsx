@@ -1,7 +1,7 @@
-import NavBar from "../../../components/NavBar/NavBar";
-import Title from "../../../components/skullKing/Title";
-import { useStoreDispatch, useStoreSelector } from "../../../hooks/store";
-import { doodlerState } from "../../../store/doodler/doodlerSlice";
+import NavBar from "@/components/NavBar/NavBar";
+import Title from "@/components/skullKing/Title";
+import { useStoreDispatch, useStoreSelector } from "@/hooks/store";
+import { doodlerState } from "@/store/doodler/doodlerSlice";
 import { useRouter } from "next/router";
 import DrawingArea from "@/components/doodler/DrawingArea";
 import { useEffect, useState } from "react";
@@ -18,6 +18,7 @@ export default function Doodler() {
 	const [connected, setConnected] = useState(false);
 	const [playerName, setPlayerName] = useState("");
 	const [waiting, setWaiting] = useState(false);
+	var playerId;
 	var hasConstructed = false;
 
 	useEffect(() => {
@@ -31,11 +32,10 @@ export default function Doodler() {
 	}, []);
 
 	function handleServerMessage(msg: string) {
-		// should get message from server when game begins!!!!!!!!!!
-		// const message = JSON.parse(msg) as Message;
-		// if (message.type === "game index") {
-		// 	setGameIndex(Number(message.value));
-		// }
+		const message = JSON.parse(msg) as Message;
+		if (message.type === "player id") {
+			playerId = Number(message.value);
+		}
 	}
 
 	function joinGame(doodleURL: string) {
