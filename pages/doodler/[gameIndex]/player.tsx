@@ -1,25 +1,23 @@
-import NavBar from "@/components/NavBar/NavBar";
-import Title from "@/components/skullKing/Title";
-import { useStoreDispatch, useStoreSelector } from "@/hooks/store";
-import { doodlerState } from "@/store/doodler/doodlerSlice";
 import { useRouter } from "next/router";
-import DrawingArea from "@/components/doodler/DrawingArea";
 import { useEffect, useState } from "react";
-import { AddPlayerMessage, Message } from "@/types/doodler";
-import PlayerNameInput from "@/components/doodler/PlayerNameInput";
-import Spinner from "@/components/Spinner";
+import {
+	AddPlayerMessage,
+	DoodleAssignment,
+	Message,
+	Player,
+} from "@/types/doodler";
+import JoinGame from "@/components/doodler/player/JoinGame";
+import CreateDoodle from "@/components/doodler/player/CreateDoodle";
 let webSocket: WebSocket;
 
 export default function Doodler() {
 	const router = useRouter();
 	const gameIndex = Number(router.query.gameIndex);
-	const dispatch = useStoreDispatch();
-	const game = useStoreSelector(doodlerState);
 	const [connected, setConnected] = useState(false);
-	const [playerName, setPlayerName] = useState("");
-	const [waiting, setWaiting] = useState(false);
-	var playerId;
 	var hasConstructed = false;
+	let playerId;
+	let doodleAssignment = "";
+	const [round, setRound] = useState(0);
 
 	useEffect(() => {
 		if (!hasConstructed) {
@@ -35,40 +33,43 @@ export default function Doodler() {
 		const message = JSON.parse(msg) as Message;
 		if (message.type === "player id") {
 			playerId = Number(message.value);
+		} else if (message.type === "create doodle") {
+			doodleAssignment = message.value;
+			setRound(1);
 		}
 	}
 
-	function joinGame(doodleURL: string) {
-		if (playerName) {
-			var addPlayer = {
-				name: playerName,
-				imageUrl: doodleURL,
-			} as AddPlayerMessage;
-			var jsonAddPlayer = JSON.stringify(addPlayer);
-			var addPlayerMessage = {
-				type: "add player",
-				gameIndex: gameIndex,
-				value: jsonAddPlayer,
-			} as Message;
-			var jsonRequest = JSON.stringify(addPlayerMessage);
-			webSocket.send(jsonRequest);
-			setWaiting(true);
-		} else alert("Please enter a name");
+	function joinGame(playerName: string, doodleURL: string) {
+		var addPlayer = {
+			name: playerName,
+			imageUrl: doodleURL,
+		} as AddPlayerMessage;
+		var jsonAddPlayer = JSON.stringify(addPlayer);
+		var addPlayerMessage = {
+			type: "add player",
+			gameIndex: gameIndex,
+			value: jsonAddPlayer,
+		} as Message;
+		var jsonRequest = JSON.stringify(addPlayerMessage);
+		webSocket.send(jsonRequest);
+	}
+
+	function submitDoodle(doodleURL: string) {
+		var msg = {
+			type: "submit doodle",
+			gameIndex: gameIndex,
+			value: doodleURL,
+		} as Message;
+		var jsonRequest = JSON.stringify(msg);
+		webSocket.send(jsonRequest);
 	}
 
 	return (
 		<>
-			<div className="h-screen">
-				<NavBar />
-				<Title title="Doodler" page="" />
-				{connected && !waiting && (
-					<div>
-						<PlayerNameInput updateName={setPlayerName} />
-						<DrawingArea action={joinGame} actionText="Join Game" />
-					</div>
-				)}
-				{waiting && <Spinner message="waiting for other players to begin..." />}
-			</div>
+			{connected && round === 0 && <JoinGame action={joinGame} />}
+			{connected && round === 1 && (
+				<CreateDoodle action={submitDoodle} assignment={doodleAssignment} />
+			)}
 		</>
 	);
 }

@@ -1,7 +1,16 @@
 import { useStoreDispatch, useStoreSelector } from "@/hooks/store";
-import { doodlerState, addPlayer } from "@/store/doodler/doodlerSlice";
+import {
+	doodlerState,
+	addPlayer,
+	updatePlayer,
+} from "@/store/doodler/doodlerSlice";
 import { useEffect, useState } from "react";
-import { Message, AddPlayerMessage, Player } from "@/types/doodler";
+import {
+	Message,
+	AddPlayerMessage,
+	Player,
+	DoodleAssignment,
+} from "@/types/doodler";
 import StartGame from "@/components/doodler/presenter/StartGame";
 
 export default function Doodler() {
@@ -42,31 +51,50 @@ export default function Doodler() {
 			const addPlayerMessage = JSON.parse(message.value) as AddPlayerMessage;
 			addPlayerMessage.imageUrl;
 			var newPlayer = {
-				index: playersState.length,
+				id: playersState.length,
 				name: addPlayerMessage.name,
 				pictureURL: addPlayerMessage.imageUrl,
-				drawingURL: "",
 				score: 0,
 			} as Player;
 
 			dispatch(addPlayer(newPlayer));
+		} else if (message.type === "submit doodle") {
+			var player = playersState[message.playerId];
+			player.assignment.drawingURL = message.value;
+			dispatch(updatePlayer(player));
 		}
 	}
 
 	function CreateDoodles() {
 		setRound(round);
-		var msg = {
-			type: "create doodles",
-			gameIndex: gameIndex,
-			value: "",
-		} as Message;
+		playersState.forEach((player) => {
+			player.assignment = GetRandomDoodleAssignment();
+			dispatch(updatePlayer(player));
+			var msg = {
+				type: "create doodle",
+				gameIndex: gameIndex,
+				playerId: player.id,
+				value: player.assignment.assignment,
+			} as Message;
+			var jsonRequest = JSON.stringify(msg);
+			webSocket.send(jsonRequest);
+		});
+	}
 
-		webSocket.send();
+	function GetRandomDoodleAssignment() {
+		var acceptableGuesses = new Array<string>();
+		acceptableGuesses.push("penguin");
+		return {
+			assignment: "penguin",
+			acceptableGuesses: acceptableGuesses,
+		} as DoodleAssignment;
 	}
 
 	return (
 		<div>
-			{round === 0 && <StartGame gameIndex={gameIndex} action={StartRound} />}
+			{round === 0 && (
+				<StartGame gameIndex={gameIndex} action={CreateDoodles} />
+			)}
 		</div>
 	);
 }

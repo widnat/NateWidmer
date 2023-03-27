@@ -5,6 +5,7 @@ export type Game = {
 export type Message = {
     type: string;
     gameIndex: number;
+    playerId: number;
     value: string;
 }
 
@@ -28,8 +29,12 @@ export type Player = {
     id: number;
 	name: string;
     pictureURL: string;
-    drawingURL: string;
-    imageDescription: string;
-    acceptableGuesses: string[];
+    assignment: DoodleAssignment
     score: number;
+}
+
+export type DoodleAssignment = {
+    assignment: string;
+    acceptableGuesses: string[];
+    drawingURL: string;
 }
