@@ -22,11 +22,11 @@ export default function CreateDoodle({ action, assignment }: Props) {
 	return (
 		<>
 			<div className="h-screen">
-				<NavBar />
-				<Title title="Doodler" page="" />
 				{!waiting && (
 					<div>
-						<div>draw {assignment}</div>
+						<div className="flex items-center justify-center">
+							draw {assignment}
+						</div>
 						<DrawingArea action={doneDrawing} actionText="Join Game" />
 					</div>
 				)}

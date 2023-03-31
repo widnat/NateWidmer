@@ -4,7 +4,7 @@ import {
 	addPlayer,
 	updatePlayer,
 } from "@/store/doodler/doodlerSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
 	Message,
 	AddPlayerMessage,
@@ -12,14 +12,22 @@ import {
 	DoodleAssignment,
 } from "@/types/doodler";
 import StartGame from "@/components/doodler/presenter/StartGame";
+import playersSlice from "@/store/skullKeeper/playersSlice";
+import Spinner from "@/components/Spinner";
+import NavBar from "@/components/NavBar/NavBar";
+import Title from "@/components/skullKing/Title";
+import CreateAssignmentDoodles from "@/components/doodler/presenter/CreateAssignmentDoodles";
 
 export default function Doodler() {
 	const dispatch = useStoreDispatch();
 	const playersState = useStoreSelector(doodlerState).players;
 	var hasConstructed = false;
 	const [gameIndex, setGameIndex] = useState(-1);
+	const [playerAssignmentIndex, setPlayerAssignmentIndex] = useState(-1);
 	const [round, setRound] = useState(0);
-	let webSocket: WebSocket;
+	const [loading, setLoading] = useState(true);
+	const ws = useRef<WebSocket>();
+	var nextNewPlayerIndex = useRef(0);
 
 	//start game
 	//draw!
@@ -37,9 +45,10 @@ export default function Doodler() {
 	useEffect(() => {
 		if (!hasConstructed) {
 			hasConstructed = true;
-			webSocket = new WebSocket("ws://localhost:8080", "presenter");
-			webSocket.onerror = (err) => console.error(err);
-			webSocket.onmessage = (msg: any) => handleServerMessage(msg.data);
+			ws.current = new WebSocket("ws://localhost:8080", "presenter");
+			ws.current.onerror = (err) => console.error(err);
+			ws.current.onopen = (event) => setLoading(false);
+			ws.current.onmessage = (msg: any) => handleServerMessage(msg.data);
 		}
 	}, []);
 
@@ -51,12 +60,13 @@ export default function Doodler() {
 			const addPlayerMessage = JSON.parse(message.value) as AddPlayerMessage;
 			addPlayerMessage.imageUrl;
 			var newPlayer = {
-				id: playersState.length,
+				id: nextNewPlayerIndex.current,
 				name: addPlayerMessage.name,
 				pictureURL: addPlayerMessage.imageUrl,
 				score: 0,
 			} as Player;
 
+			nextNewPlayerIndex.current++;
 			dispatch(addPlayer(newPlayer));
 		} else if (message.type === "submit doodle") {
 			var player = playersState[message.playerId];
@@ -66,18 +76,27 @@ export default function Doodler() {
 	}
 
 	function CreateDoodles() {
-		setRound(round);
-		playersState.forEach((player) => {
-			player.assignment = GetRandomDoodleAssignment();
+		setRound(1);
+		playersState.forEach((playerState) => {
+			var assignment = GetRandomDoodleAssignment();
+			var player = {
+				id: playerState.id,
+				name: playerState.name,
+				pictureURL: playerState.pictureURL,
+				assignment: assignment,
+				score: playerState.score,
+			} as Player;
 			dispatch(updatePlayer(player));
 			var msg = {
 				type: "create doodle",
 				gameIndex: gameIndex,
 				playerId: player.id,
-				value: player.assignment.assignment,
+				value: assignment.assignment,
 			} as Message;
 			var jsonRequest = JSON.stringify(msg);
-			webSocket.send(jsonRequest);
+			if (ws.current !== undefined) {
+				ws.current.send(jsonRequest);
+			}
 		});
 	}
 
@@ -85,15 +104,31 @@ export default function Doodler() {
 		var acceptableGuesses = new Array<string>();
 		acceptableGuesses.push("penguin");
 		return {
-			assignment: "penguin",
+			assignment: "a penguin",
 			acceptableGuesses: acceptableGuesses,
 		} as DoodleAssignment;
 	}
 
+	function GoToNextPlayerAssignment() {
+		setPlayerAssignmentIndex(playerAssignmentIndex + 1);
+	}
+
 	return (
 		<div>
+			<NavBar />
+			<Title title="Doodler" page="" />
+			{loading && <Spinner message="loading..." />}
 			{round === 0 && (
 				<StartGame gameIndex={gameIndex} action={CreateDoodles} />
+			)}
+			{round === 1 && (
+				<CreateAssignmentDoodles action={GoToNextPlayerAssignment} />
+			)}
+			{playerAssignmentIndex > 0 && (
+				<>
+					send assignment pic of first player to everyone except that player,
+					send that player a waiting msg
+				</>
 			)}
 		</div>
 	);

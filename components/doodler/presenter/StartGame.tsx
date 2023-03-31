@@ -36,8 +36,6 @@ export default function StartGame({ gameIndex, action }: Props) {
 
 	return (
 		<div>
-			<NavBar />
-			<Title title="Doodler" page="" />
 			{gameIndex != -1 && (
 				<div className="flex self-stretch w-screen justify-center">
 					<div className="flex-col space-y-3">

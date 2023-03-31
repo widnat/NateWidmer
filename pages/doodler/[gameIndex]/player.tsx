@@ -1,14 +1,10 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import {
-	AddPlayerMessage,
-	DoodleAssignment,
-	Message,
-	Player,
-} from "@/types/doodler";
+import { useEffect, useRef, useState } from "react";
+import { AddPlayerMessage, Message } from "@/types/doodler";
 import JoinGame from "@/components/doodler/player/JoinGame";
 import CreateDoodle from "@/components/doodler/player/CreateDoodle";
-let webSocket: WebSocket;
+import NavBar from "@/components/NavBar/NavBar";
+import Title from "@/components/skullKing/Title";
 
 export default function Doodler() {
 	const router = useRouter();
@@ -16,25 +12,26 @@ export default function Doodler() {
 	const [connected, setConnected] = useState(false);
 	var hasConstructed = false;
 	let playerId;
-	let doodleAssignment = "";
+	const [doodleAssignment, setDoodleAssignment] = useState("");
 	const [round, setRound] = useState(0);
+	const ws = useRef<WebSocket>();
 
 	useEffect(() => {
-		if (!hasConstructed) {
+		if (!hasConstructed && router.isReady) {
 			hasConstructed = true;
-			webSocket = new WebSocket("ws://localhost:8080", String(gameIndex));
-			webSocket.onerror = (err) => console.error(err);
-			webSocket.onopen = (event) => setConnected(true);
-			webSocket.onmessage = (msg: any) => handleServerMessage(msg.data);
+			ws.current = new WebSocket("ws://localhost:8080", String(gameIndex));
+			ws.current.onerror = (err) => console.error(err);
+			ws.current.onopen = (event) => setConnected(true);
+			ws.current.onmessage = (msg: any) => handleServerMessage(msg.data);
 		}
-	}, []);
+	}, [router.isReady]);
 
 	function handleServerMessage(msg: string) {
 		const message = JSON.parse(msg) as Message;
 		if (message.type === "player id") {
 			playerId = Number(message.value);
 		} else if (message.type === "create doodle") {
-			doodleAssignment = message.value;
+			setDoodleAssignment(message.value);
 			setRound(1);
 		}
 	}
@@ -51,7 +48,9 @@ export default function Doodler() {
 			value: jsonAddPlayer,
 		} as Message;
 		var jsonRequest = JSON.stringify(addPlayerMessage);
-		webSocket.send(jsonRequest);
+		if (ws.current !== undefined) {
+			ws.current.send(jsonRequest);
+		}
 	}
 
 	function submitDoodle(doodleURL: string) {
@@ -61,11 +60,15 @@ export default function Doodler() {
 			value: doodleURL,
 		} as Message;
 		var jsonRequest = JSON.stringify(msg);
-		webSocket.send(jsonRequest);
+		if (ws.current !== undefined) {
+			ws.current.send(jsonRequest);
+		}
 	}
 
 	return (
 		<>
+			<NavBar />
+			<Title title="Doodler" page="" />
 			{connected && round === 0 && <JoinGame action={joinGame} />}
 			{connected && round === 1 && (
 				<CreateDoodle action={submitDoodle} assignment={doodleAssignment} />

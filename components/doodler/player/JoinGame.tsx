@@ -23,8 +23,6 @@ export default function JoinGame({ action }: Props) {
 	return (
 		<>
 			<div className="h-screen">
-				<NavBar />
-				<Title title="Doodler" page="" />
 				{!waiting && (
 					<div>
 						<PlayerNameInput updateName={setPlayerName} />
