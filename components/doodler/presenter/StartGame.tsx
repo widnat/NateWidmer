@@ -1,23 +1,22 @@
-import NavBar from "@/components/NavBar/NavBar";
-import Title from "@/components/skullKing/Title";
-import { useStoreSelector } from "@/hooks/store";
-import { doodlerState } from "@/store/doodler/doodlerSlice";
 import { useEffect, useState } from "react";
 import Btn from "@/components/doodler/Btn";
+import { Player } from "@/types/doodler";
 
 type Props = {
 	gameIndex: number;
 	action: any;
+	players: Player[];
 };
 
-export default function StartGame({ gameIndex, action }: Props) {
-	const playersState = useStoreSelector(doodlerState).players;
-	const [players, setPlayers] = useState(new Array<JSX.Element>());
+export default function StartGame({ gameIndex, action, players }: Props) {
+	const [playerDisplays, setPlayerDisplays] = useState(
+		new Array<JSX.Element>()
+	);
 
 	useEffect(() => {
-		var updatedPlayers = playersState.map((player) => {
+		var updatedPlayers = players.map((player) => {
 			return (
-				<div className="m-3">
+				<div key={player.id} className="m-3">
 					<img
 						className="border-2 rounded-md border-teal-500"
 						key={player.name}
@@ -31,8 +30,8 @@ export default function StartGame({ gameIndex, action }: Props) {
 				</div>
 			);
 		});
-		setPlayers(updatedPlayers);
-	}, [playersState]);
+		setPlayerDisplays(updatedPlayers);
+	}, [players]);
 
 	return (
 		<div>
@@ -50,7 +49,7 @@ export default function StartGame({ gameIndex, action }: Props) {
 						</div>
 
 						<div className="flex self-stretch justify-center max-w-7xl">
-							<div className="flex flex-wrap">{players}</div>
+							<div className="flex flex-wrap">{playerDisplays}</div>
 						</div>
 					</div>
 				</div>

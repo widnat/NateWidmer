@@ -35,6 +35,6 @@ export type Player = {
 
 export type DoodleAssignment = {
     assignment: string;
-    acceptableGuesses: string[];
+    answers: string[];
     drawingURL: string;
 }

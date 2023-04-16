@@ -2,16 +2,16 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { AddPlayerMessage, Message } from "@/types/doodler";
 import JoinGame from "@/components/doodler/player/JoinGame";
-import CreateDoodle from "@/components/doodler/player/CreateDoodle";
+import CreateAssignmentDoodle from "@/components/doodler/player/CreateAssignmentDoodle";
 import NavBar from "@/components/NavBar/NavBar";
-import Title from "@/components/skullKing/Title";
+import Title from "@/components/Title";
 
 export default function Doodler() {
 	const router = useRouter();
 	const gameIndex = Number(router.query.gameIndex);
 	const [connected, setConnected] = useState(false);
 	var hasConstructed = false;
-	let playerId;
+	const playerId = useRef<number>(-1);
 	const [doodleAssignment, setDoodleAssignment] = useState("");
 	const [round, setRound] = useState(0);
 	const ws = useRef<WebSocket>();
@@ -29,7 +29,7 @@ export default function Doodler() {
 	function handleServerMessage(msg: string) {
 		const message = JSON.parse(msg) as Message;
 		if (message.type === "player id") {
-			playerId = Number(message.value);
+			playerId.current = Number(message.value);
 		} else if (message.type === "create doodle") {
 			setDoodleAssignment(message.value);
 			setRound(1);
@@ -53,10 +53,11 @@ export default function Doodler() {
 		}
 	}
 
-	function submitDoodle(doodleURL: string) {
+	function submitAssignmentDoodle(doodleURL: string) {
 		var msg = {
-			type: "submit doodle",
+			type: "submit assignment doodle",
 			gameIndex: gameIndex,
+			playerId: playerId.current,
 			value: doodleURL,
 		} as Message;
 		var jsonRequest = JSON.stringify(msg);
@@ -71,7 +72,10 @@ export default function Doodler() {
 			<Title title="Doodler" page="" />
 			{connected && round === 0 && <JoinGame action={joinGame} />}
 			{connected && round === 1 && (
-				<CreateDoodle action={submitDoodle} assignment={doodleAssignment} />
+				<CreateAssignmentDoodle
+					action={submitAssignmentDoodle}
+					assignment={doodleAssignment}
+				/>
 			)}
 		</>
 	);

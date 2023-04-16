@@ -1,22 +1,26 @@
-import { useStoreSelector } from "@/hooks/store";
-import { doodlerState } from "@/store/doodler/doodlerSlice";
+import { Player } from "../../../types/doodler";
 import { useEffect, useState } from "react";
 
 type Props = {
 	action: any;
+	players: Player[];
 };
 
-export default function CreateAssignmentDoodles({ action }: Props) {
-	const playersState = useStoreSelector(doodlerState).players;
-	const [players, setPlayers] = useState(new Array<JSX.Element>());
+export default function CreateAssignmentDoodles({ action, players }: Props) {
+	const [playerDisplays, setPlayerDisplays] = useState(
+		new Array<JSX.Element>()
+	);
+	const [message, setMessage] = useState(
+		"Doodlers, do your best to draw your assignment!"
+	);
 
 	useEffect(() => {
 		var readyToContinue = true;
-		var updatedPlayers = playersState.map((player) => {
+		var updatedPlayers = players.map((player) => {
 			if (!player.assignment?.drawingURL) readyToContinue = false;
 
 			return (
-				<>
+				<div key={player.id}>
 					{player.assignment?.drawingURL && (
 						<div className="m-3">
 							<img
@@ -31,22 +35,28 @@ export default function CreateAssignmentDoodles({ action }: Props) {
 							</div>
 						</div>
 					)}
-				</>
+				</div>
 			);
 		});
 
-		setPlayers(updatedPlayers);
-		if (readyToContinue) action();
-	}, [playersState]);
+		setPlayerDisplays(updatedPlayers);
+		if (readyToContinue) {
+			setMessage("All finished!");
+			setTimeout(function () {
+				setMessage("Lets play!");
+			}, 1500);
+			setTimeout(function () {
+				action();
+			}, 1500);
+		}
+	}, [players]);
 
 	return (
 		<div className="flex self-stretch w-screen justify-center">
 			<div className="flex-col space-y-3">
-				<div className="flex self-stretch justify-center">
-					Doodlers, do your best to draw your assignment!
-				</div>
+				<div className="flex self-stretch justify-center">{message}</div>
 				<div className="flex self-stretch justify-center max-w-7xl">
-					<div className="flex flex-wrap">{players}</div>
+					<div className="flex flex-wrap">{playerDisplays}</div>
 				</div>
 			</div>
 		</div>

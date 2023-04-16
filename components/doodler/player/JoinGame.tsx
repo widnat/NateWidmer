@@ -1,5 +1,5 @@
 import NavBar from "@/components/NavBar/NavBar";
-import Title from "@/components/skullKing/Title";
+import Title from "@/components/Title";
 import { useState } from "react";
 import DrawingArea from "@/components/doodler/DrawingArea";
 import PlayerNameInput from "@/components/doodler/PlayerNameInput";

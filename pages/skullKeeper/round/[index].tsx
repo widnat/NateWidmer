@@ -1,7 +1,7 @@
 import { useState } from "react";
 import NavBar from "../../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../../components/skullKing/NavBar";
-import Title from "../../../components/skullKing/Title";
+import Title from "../../../components/Title";
 import PlayerInfo from "../../../components/skullKing/PlayerInfo";
 import { useStoreSelector } from "../../../hooks/store";
 import { roundsState } from "../../../store/skullKeeper/roundsSlice";

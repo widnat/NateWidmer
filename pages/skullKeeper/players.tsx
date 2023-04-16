@@ -1,6 +1,6 @@
 import NavBar from "../../components/NavBar/NavBar";
 import SkullKeeperNavBar from "../../components/skullKing/NavBar";
-import Title from "../../components/skullKing/Title";
+import Title from "../../components/Title";
 import PlayerNameInput from "../../components/skullKing/PlayerNameInput";
 import { useStoreDispatch, useStoreSelector } from "../../hooks/store";
 import { playersState } from "../../store/skullKeeper/playersSlice";

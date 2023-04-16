@@ -1,9 +1,3 @@
-import { useStoreDispatch, useStoreSelector } from "@/hooks/store";
-import {
-	doodlerState,
-	addPlayer,
-	updatePlayer,
-} from "@/store/doodler/doodlerSlice";
 import { useEffect, useRef, useState } from "react";
 import {
 	Message,
@@ -12,15 +6,20 @@ import {
 	DoodleAssignment,
 } from "@/types/doodler";
 import StartGame from "@/components/doodler/presenter/StartGame";
-import playersSlice from "@/store/skullKeeper/playersSlice";
 import Spinner from "@/components/Spinner";
 import NavBar from "@/components/NavBar/NavBar";
-import Title from "@/components/skullKing/Title";
+import Title from "@/components/Title";
 import CreateAssignmentDoodles from "@/components/doodler/presenter/CreateAssignmentDoodles";
+import { GetRandomDoodleAssignment } from "@/components/doodler/DoodlerEngine";
 
 export default function Doodler() {
-	const dispatch = useStoreDispatch();
-	const playersState = useStoreSelector(doodlerState).players;
+	const [_players, _setPlayers] = useState<Player[]>([]);
+	const playersRef = useRef(_players);
+	const setPlayers = (updatedPlayers: Player[]) => {
+		playersRef.current = updatedPlayers;
+		_setPlayers(updatedPlayers);
+	};
+
 	var hasConstructed = false;
 	const [gameIndex, setGameIndex] = useState(-1);
 	const [playerAssignmentIndex, setPlayerAssignmentIndex] = useState(-1);
@@ -65,32 +64,52 @@ export default function Doodler() {
 				pictureURL: addPlayerMessage.imageUrl,
 				score: 0,
 			} as Player;
+			var logMsg =
+				"added " +
+				addPlayerMessage.name +
+				" with playerId:" +
+				nextNewPlayerIndex.current;
+			console.log(logMsg);
 
 			nextNewPlayerIndex.current++;
-			dispatch(addPlayer(newPlayer));
-		} else if (message.type === "submit doodle") {
-			var player = playersState[message.playerId];
-			player.assignment.drawingURL = message.value;
-			dispatch(updatePlayer(player));
+			setPlayers([...playersRef.current, newPlayer]);
+		} else if (message.type === "submit assignment doodle") {
+			var players = new Array<Player>();
+			playersRef.current.forEach((player) => {
+				if (player.id === message.playerId)
+					player.assignment.drawingURL = message.value;
+
+				players.push(player);
+			});
+
+			setPlayers(players);
+			var logMsg = "got assignment doodle from playerId:" + message.playerId;
+			console.log(logMsg);
+			logMsg =
+				"the assignment drawing url has a value: " +
+				(playersRef.current[message.playerId].assignment.drawingURL !== "");
+			console.log(logMsg);
 		}
 	}
 
 	function CreateDoodles() {
 		setRound(1);
-		playersState.forEach((playerState) => {
+		var updatedPlayers = new Array<Player>();
+		playersRef.current.forEach((player) => {
 			var assignment = GetRandomDoodleAssignment();
-			var player = {
-				id: playerState.id,
-				name: playerState.name,
-				pictureURL: playerState.pictureURL,
+
+			var newPlayer = {
+				id: player.id,
+				name: player.name,
+				pictureURL: player.pictureURL,
 				assignment: assignment,
-				score: playerState.score,
+				score: player.score,
 			} as Player;
-			dispatch(updatePlayer(player));
+			updatedPlayers.push(newPlayer);
 			var msg = {
 				type: "create doodle",
 				gameIndex: gameIndex,
-				playerId: player.id,
+				playerId: newPlayer.id,
 				value: assignment.assignment,
 			} as Message;
 			var jsonRequest = JSON.stringify(msg);
@@ -98,15 +117,8 @@ export default function Doodler() {
 				ws.current.send(jsonRequest);
 			}
 		});
-	}
 
-	function GetRandomDoodleAssignment() {
-		var acceptableGuesses = new Array<string>();
-		acceptableGuesses.push("penguin");
-		return {
-			assignment: "a penguin",
-			acceptableGuesses: acceptableGuesses,
-		} as DoodleAssignment;
+		setPlayers(updatedPlayers);
 	}
 
 	function GoToNextPlayerAssignment() {
@@ -119,10 +131,17 @@ export default function Doodler() {
 			<Title title="Doodler" page="" />
 			{loading && <Spinner message="loading..." />}
 			{round === 0 && (
-				<StartGame gameIndex={gameIndex} action={CreateDoodles} />
+				<StartGame
+					gameIndex={gameIndex}
+					action={CreateDoodles}
+					players={playersRef.current}
+				/>
 			)}
 			{round === 1 && (
-				<CreateAssignmentDoodles action={GoToNextPlayerAssignment} />
+				<CreateAssignmentDoodles
+					action={GoToNextPlayerAssignment}
+					players={playersRef.current}
+				/>
 			)}
 			{playerAssignmentIndex > 0 && (
 				<>

@@ -1,8 +1,5 @@
-import NavBar from "@/components/NavBar/NavBar";
-import Title from "@/components/skullKing/Title";
 import { useState } from "react";
 import DrawingArea from "@/components/doodler/DrawingArea";
-import PlayerNameInput from "@/components/doodler/PlayerNameInput";
 import Spinner from "@/components/Spinner";
 
 type Props = {
@@ -27,7 +24,7 @@ export default function CreateDoodle({ action, assignment }: Props) {
 						<div className="flex items-center justify-center">
 							draw {assignment}
 						</div>
-						<DrawingArea action={doneDrawing} actionText="Join Game" />
+						<DrawingArea action={doneDrawing} actionText="Submit Doodle" />
 					</div>
 				)}
 				{waiting && (
