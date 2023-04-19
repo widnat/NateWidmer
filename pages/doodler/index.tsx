@@ -11,6 +11,7 @@ import NavBar from "@/components/NavBar/NavBar";
 import Title from "@/components/Title";
 import CreateAssignmentDoodles from "@/components/doodler/presenter/CreateAssignmentDoodles";
 import { GetRandomDoodleAssignment } from "@/components/doodler/DoodlerEngine";
+import FirstGuess from "@/components/doodler/presenter/FirstGuess";
 
 export default function Doodler() {
 	const [_players, _setPlayers] = useState<Player[]>([]);
@@ -89,6 +90,17 @@ export default function Doodler() {
 				"the assignment drawing url has a value: " +
 				(playersRef.current[message.playerId].assignment.drawingURL !== "");
 			console.log(logMsg);
+		} else if (message.type === "submit first guess") {
+			var players = new Array<Player>();
+			playersRef.current.forEach((player) => {
+				if (player.id === message.playerId) player.firstGuess = message.value;
+
+				players.push(player);
+			});
+
+			setPlayers(players);
+			var logMsg = "got first guess from playerId:" + message.playerId;
+			console.log(logMsg);
 		}
 	}
 
@@ -97,7 +109,6 @@ export default function Doodler() {
 		var updatedPlayers = new Array<Player>();
 		playersRef.current.forEach((player) => {
 			var assignment = GetRandomDoodleAssignment();
-
 			var newPlayer = {
 				id: player.id,
 				name: player.name,
@@ -112,17 +123,90 @@ export default function Doodler() {
 				playerId: newPlayer.id,
 				value: assignment.assignment,
 			} as Message;
-			var jsonRequest = JSON.stringify(msg);
-			if (ws.current !== undefined) {
-				ws.current.send(jsonRequest);
-			}
+			SendMessage(msg);
 		});
 
 		setPlayers(updatedPlayers);
 	}
 
 	function GoToNextPlayerAssignment() {
-		setPlayerAssignmentIndex(playerAssignmentIndex + 1);
+		console.log("in GoToNextPlayerAssignment");
+		var index = playerAssignmentIndex + 1;
+		setPlayerAssignmentIndex(index);
+		var updatedPlayers = playersRef.current;
+		updatedPlayers.forEach((player) => {
+			player.firstGuess = "";
+			player.secondGuess = "";
+		});
+		setPlayers(updatedPlayers);
+
+		playersRef.current.forEach((player) => {
+			if (player.id === index) {
+				var logMsg =
+					"playerId: " + player.id + " is waiting for others to guess";
+				console.log(logMsg);
+				var msg = {
+					type: "sit back and relax",
+					gameIndex: gameIndex,
+					playerId: player.id,
+				} as Message;
+				SendMessage(msg);
+			} else {
+				var logMsg =
+					"playerId: " + player.id + " is about to make their first guess";
+				console.log(logMsg);
+				var msg = {
+					type: "time to guess",
+					gameIndex: gameIndex,
+					playerId: player.id,
+				} as Message;
+				SendMessage(msg);
+			}
+		});
+	}
+
+	function HandleFirstGuess() {
+		console.log("in HandleFirstGuess");
+		playersRef.current.forEach((player) => {
+			if (player.id !== playerAssignmentIndex) {
+				var logMsg =
+					"playerId: " + player.id + " is about to make their second guess";
+				console.log(logMsg);
+				var msg = {
+					type: "time to guess again",
+					gameIndex: gameIndex,
+					playerId: player.id,
+				} as Message;
+				SendMessage(msg);
+			}
+		});
+	}
+
+	function HandleSecondGuess() {
+		console.log("in HandleSecondGuess");
+		var playerAssignment = playersRef.current[playerAssignmentIndex].assignment;
+		// playerAssignment.answers
+
+		playersRef.current.forEach((player) => {
+			if (player.id !== playerAssignmentIndex) {
+				var logMsg =
+					"playerId: " + player.id + " is about to make their second guess";
+				console.log(logMsg);
+				var msg = {
+					type: "time to guess again",
+					gameIndex: gameIndex,
+					playerId: player.id,
+				} as Message;
+				SendMessage(msg);
+			}
+		});
+	}
+
+	function SendMessage(msg: Message) {
+		var jsonRequest = JSON.stringify(msg);
+		if (ws.current !== undefined) {
+			ws.current.send(jsonRequest);
+		}
 	}
 
 	return (
@@ -144,10 +228,7 @@ export default function Doodler() {
 				/>
 			)}
 			{playerAssignmentIndex > 0 && (
-				<>
-					send assignment pic of first player to everyone except that player,
-					send that player a waiting msg
-				</>
+				<FirstGuess action={HandleFirstGuess} players={playersRef.current} />
 			)}
 		</div>
 	);

@@ -5,6 +5,7 @@ import JoinGame from "@/components/doodler/player/JoinGame";
 import CreateAssignmentDoodle from "@/components/doodler/player/CreateAssignmentDoodle";
 import NavBar from "@/components/NavBar/NavBar";
 import Title from "@/components/Title";
+import PlayersFirstGuess from "@/components/doodler/player/PlayersFirstGuess";
 
 export default function Doodler() {
 	const router = useRouter();
@@ -14,6 +15,8 @@ export default function Doodler() {
 	const playerId = useRef<number>(-1);
 	const [doodleAssignment, setDoodleAssignment] = useState("");
 	const [round, setRound] = useState(0);
+	const [isPlayersAssignment, setIsPlayersAssignment] = useState(false);
+	const [isFirstGuess, setIsFirstGuess] = useState(false);
 	const ws = useRef<WebSocket>();
 
 	useEffect(() => {
@@ -33,6 +36,15 @@ export default function Doodler() {
 		} else if (message.type === "create doodle") {
 			setDoodleAssignment(message.value);
 			setRound(1);
+		} else if (message.type === "sit back and relax") {
+			console.log("waiting for other players to guess");
+			setRound(-1);
+			setIsPlayersAssignment(true);
+		} else if (message.type === "time to guess") {
+			console.log("ready to guess");
+			setRound(-1);
+			setIsPlayersAssignment(false);
+			setIsFirstGuess(true);
 		}
 	}
 
@@ -42,15 +54,12 @@ export default function Doodler() {
 			imageUrl: doodleURL,
 		} as AddPlayerMessage;
 		var jsonAddPlayer = JSON.stringify(addPlayer);
-		var addPlayerMessage = {
+		var msg = {
 			type: "add player",
 			gameIndex: gameIndex,
 			value: jsonAddPlayer,
 		} as Message;
-		var jsonRequest = JSON.stringify(addPlayerMessage);
-		if (ws.current !== undefined) {
-			ws.current.send(jsonRequest);
-		}
+		SendMessage(msg);
 	}
 
 	function submitAssignmentDoodle(doodleURL: string) {
@@ -60,6 +69,20 @@ export default function Doodler() {
 			playerId: playerId.current,
 			value: doodleURL,
 		} as Message;
+		SendMessage(msg);
+	}
+
+	function submitFirstGuess(guess: string) {
+		var msg = {
+			type: "submit first guess",
+			gameIndex: gameIndex,
+			playerId: playerId.current,
+			value: guess,
+		} as Message;
+		SendMessage(msg);
+	}
+
+	function SendMessage(msg: Message) {
 		var jsonRequest = JSON.stringify(msg);
 		if (ws.current !== undefined) {
 			ws.current.send(jsonRequest);
@@ -76,6 +99,18 @@ export default function Doodler() {
 					action={submitAssignmentDoodle}
 					assignment={doodleAssignment}
 				/>
+			)}
+			{connected && isPlayersAssignment && (
+				<div className="h-screen">
+					<div className="flex items-center justify-center">
+						sit back and relax while the others guess!
+					</div>
+				</div>
+			)}
+			{connected && isFirstGuess && (
+				<div className="h-screen">
+					<PlayersFirstGuess submitGuess={submitFirstGuess} />
+				</div>
 			)}
 		</>
 	);

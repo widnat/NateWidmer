@@ -29,7 +29,9 @@ export type Player = {
     id: number;
 	name: string;
     pictureURL: string;
-    assignment: DoodleAssignment
+    assignment: DoodleAssignment;
+	firstGuess: string;
+    secondGuess: string;
     score: number;
 }
 
