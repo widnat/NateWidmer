@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar/NavBar";
 import Projects from "@/components/Projects";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function Home() {
+export default function Home(hex: number) {
 	return (
 		<>
 			<Head>
@@ -14,7 +14,31 @@ export default function Home() {
 			</Head>
 			<NavBar />
 			<div>
-				<Projects />
+				<div className="flex-row m-3">
+					<div className="flex self-stretch justify-center text-gray-700 text-3xl">
+						Welcome to my projects website of 2023!
+					</div>
+					<div className="flex self-stretch justify-center mt-3">
+						Go ahead and check out some of my current projects in the links
+						above <span className="text-lg ml-1">&#8593;</span>
+					</div>
+					<div className="flex self-stretch justify-center">
+						If you like babies and want to see something funny, watch the video
+						below <span className="text-lg ml-1">&#8595;</span>
+					</div>
+					<div className="flex self-stretch justify-center">
+						<iframe
+							width="320"
+							height="560"
+							src="https://www.youtube.com/embed/PUr0Z2lC2TY"
+							title="Baby love food"
+							frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							allowfullscreen
+						></iframe>
+					</div>
+				</div>
+				{/* <Projects /> */}
 			</div>
 		</>
 	);

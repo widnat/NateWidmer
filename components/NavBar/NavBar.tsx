@@ -20,16 +20,15 @@ export default function NavBar() {
 						<div className="hidden sm:ml-6 sm:block">
 							<div className="flex space-x-4">
 								<HrefBtn route="/" text="Home" />
-								<HrefBtn route="#" text="Memoizit" />
 								<HrefBtn route="/skullKeeper/players" text="skull Keeper" />
 								<HrefBtn route="/calculator/calculator" text="Calculator" />
 								<HrefBtn route="/doodler" text="Doodler" />
 							</div>
 						</div>
 					</div>
-					<div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+					{/* <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
 						<HrefBtn route="#" text="About Me" />
-					</div>
+					</div> */}
 				</div>
 			</div>
 
