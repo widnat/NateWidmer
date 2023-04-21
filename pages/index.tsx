@@ -32,10 +32,8 @@ export default function Home(hex: number) {
 							height="560"
 							src="https://www.youtube.com/embed/PUr0Z2lC2TY"
 							title="Baby love food"
-							frameborder="0"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							allowfullscreen
-						></iframe>
+						/>
 					</div>
 				</div>
 				{/* <Projects /> */}
