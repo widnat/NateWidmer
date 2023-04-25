@@ -6,6 +6,7 @@ import CreateAssignmentDoodle from "@/components/doodler/player/CreateAssignment
 import NavBar from "@/components/NavBar/NavBar";
 import Title from "@/components/Title";
 import PlayersFirstGuess from "@/components/doodler/player/PlayersFirstGuess";
+import PlayersSecondGuess from "@/components/doodler/player/PlayersSecondGuess";
 
 export default function Doodler() {
 	const router = useRouter();
@@ -17,6 +18,8 @@ export default function Doodler() {
 	const [round, setRound] = useState(0);
 	const [isPlayersAssignment, setIsPlayersAssignment] = useState(false);
 	const [isFirstGuess, setIsFirstGuess] = useState(false);
+	const [isSecondGuess, setIsSecondGuess] = useState(false);
+	const [options, setOptions] = useState(new Array<string>());
 	const ws = useRef<WebSocket>();
 
 	useEffect(() => {
@@ -45,6 +48,14 @@ export default function Doodler() {
 			setRound(-1);
 			setIsPlayersAssignment(false);
 			setIsFirstGuess(true);
+			setIsSecondGuess(false);
+		} else if (message.type === "time to guess again") {
+			console.log("ready to guess again");
+			setIsPlayersAssignment(false);
+			setIsFirstGuess(false);
+			setIsSecondGuess(true);
+			var updateOptions = JSON.parse(message.value) as Array<string>;
+			setOptions(updateOptions);
 		}
 	}
 
@@ -82,6 +93,16 @@ export default function Doodler() {
 		SendMessage(msg);
 	}
 
+	function submitSecondGuess(guess: string) {
+		var msg = {
+			type: "submit second guess",
+			gameIndex: gameIndex,
+			playerId: playerId.current,
+			value: guess,
+		} as Message;
+		SendMessage(msg);
+	}
+
 	function SendMessage(msg: Message) {
 		var jsonRequest = JSON.stringify(msg);
 		if (ws.current !== undefined) {
@@ -110,6 +131,11 @@ export default function Doodler() {
 			{connected && isFirstGuess && (
 				<div className="h-screen">
 					<PlayersFirstGuess submitGuess={submitFirstGuess} />
+				</div>
+			)}
+			{connected && isSecondGuess && (
+				<div className="h-screen">
+					<PlayersSecondGuess submitGuess={submitSecondGuess} options={options} />
 				</div>
 			)}
 		</>

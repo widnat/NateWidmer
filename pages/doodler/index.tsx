@@ -12,6 +12,7 @@ import Title from "@/components/Title";
 import CreateAssignmentDoodles from "@/components/doodler/presenter/CreateAssignmentDoodles";
 import { GetRandomDoodleAssignment } from "@/components/doodler/DoodlerEngine";
 import FirstGuess from "@/components/doodler/presenter/FirstGuess";
+import SecondGuess from "@/components/doodler/presenter/SecondGuess";
 
 export default function Doodler() {
 	const [_players, _setPlayers] = useState<Player[]>([]);
@@ -20,7 +21,9 @@ export default function Doodler() {
 		playersRef.current = updatedPlayers;
 		_setPlayers(updatedPlayers);
 	};
-
+	const [isFirstGuess, setIsFirstGuess] = useState(false);
+	const [options, setOptions] = useState(new Array<string>());
+	const [isSecondGuess, setIsSecondGuess] = useState(false);
 	var hasConstructed = false;
 	const [gameIndex, setGameIndex] = useState(-1);
 	const [playerAssignmentIndex, setPlayerAssignmentIndex] = useState(-1);
@@ -101,6 +104,8 @@ export default function Doodler() {
 			setPlayers(players);
 			var logMsg = "got first guess from playerId:" + message.playerId;
 			console.log(logMsg);
+		} else if (message.type === "submit second guess") {
+			//show results for this round then start next round
 		}
 	}
 
@@ -130,8 +135,13 @@ export default function Doodler() {
 	}
 
 	function GoToNextPlayerAssignment() {
+		setRound(-1);
+		setIsFirstGuess(true);
+		setIsSecondGuess(false);
 		console.log("in GoToNextPlayerAssignment");
 		var index = playerAssignmentIndex + 1;
+		var assignmentIndexMsg = "player assignment index: " + index;
+		console.log(assignmentIndexMsg);
 		setPlayerAssignmentIndex(index);
 		var updatedPlayers = playersRef.current;
 		updatedPlayers.forEach((player) => {
@@ -165,8 +175,15 @@ export default function Doodler() {
 		});
 	}
 
-	function HandleFirstGuess() {
-		console.log("in HandleFirstGuess");
+	function StartSecondGuess() {
+		console.log("in StartSecondGuess");
+		var updatedOptions = new Array<string>();
+		playersRef.current.forEach((player) => {
+			if (player.firstGuess)
+				updatedOptions.push(player.firstGuess);
+		});
+		setOptions(updatedOptions);
+		var updatedOptionsString = JSON.stringify(updatedOptions);
 		playersRef.current.forEach((player) => {
 			if (player.id !== playerAssignmentIndex) {
 				var logMsg =
@@ -176,30 +193,15 @@ export default function Doodler() {
 					type: "time to guess again",
 					gameIndex: gameIndex,
 					playerId: player.id,
+					value: updatedOptionsString,
 				} as Message;
 				SendMessage(msg);
 			}
 		});
 	}
 
-	function HandleSecondGuess() {
-		console.log("in HandleSecondGuess");
-		var playerAssignment = playersRef.current[playerAssignmentIndex].assignment;
-		// playerAssignment.answers
-
-		playersRef.current.forEach((player) => {
-			if (player.id !== playerAssignmentIndex) {
-				var logMsg =
-					"playerId: " + player.id + " is about to make their second guess";
-				console.log(logMsg);
-				var msg = {
-					type: "time to guess again",
-					gameIndex: gameIndex,
-					playerId: player.id,
-				} as Message;
-				SendMessage(msg);
-			}
-		});
+	function FinishSecondGuess() {
+		console.log("in FinishSecondGuess");
 	}
 
 	function SendMessage(msg: Message) {
@@ -227,8 +229,20 @@ export default function Doodler() {
 					players={playersRef.current}
 				/>
 			)}
-			{playerAssignmentIndex > 0 && (
-				<FirstGuess action={HandleFirstGuess} players={playersRef.current} />
+			{playerAssignmentIndex > -1 && isFirstGuess && (
+				<FirstGuess
+					action={StartSecondGuess}
+					players={playersRef.current}
+					playerAssignmentIndex={playerAssignmentIndex}
+				/>
+			)}
+			{playerAssignmentIndex > -1 && isSecondGuess && (
+				<SecondGuess
+					action={FinishSecondGuess}
+					players={playersRef.current}
+					playerAssignmentIndex={playerAssignmentIndex}
+					options={options}
+				/>
 			)}
 		</div>
 	);

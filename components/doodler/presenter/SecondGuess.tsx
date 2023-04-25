@@ -5,22 +5,29 @@ type Props = {
 	action: any;
 	playerAssignmentIndex: number;
 	players: Player[];
+	options: string[];
 };
 
-export default function FirstGuess({
+export default function SecondGuess({
 	action,
 	players,
 	playerAssignmentIndex,
+	options,
 }: Props) {
 	const [playerDisplays, setPlayerDisplays] = useState(
 		new Array<JSX.Element>()
 	);
-	const [message, setMessage] = useState("Make your best guess!");
+	const optionDisplays = options.map((option: string) => {
+		return <div className="flex-row">{option}</div>;
+	});
+	const [message, setMessage] = useState(
+		"What option describes the Doodle the best?"
+	);
 
 	useEffect(() => {
-		var numFinishedPlayers = 0;
+		var readyToContinue = true;
 		var updatedPlayers = players.map((player) => {
-			if (player.firstGuess) ++numFinishedPlayers;
+			if (!player.firstGuess) readyToContinue = false;
 
 			return (
 				<div key={player.id}>
@@ -43,10 +50,10 @@ export default function FirstGuess({
 		});
 
 		setPlayerDisplays(updatedPlayers);
-		if (numFinishedPlayers + 1 === players.length) {
+		if (readyToContinue) {
 			setMessage("All finished!");
 			setTimeout(function () {
-				setMessage("On to the next guess!");
+				setMessage("Lets see the results!");
 			}, 1500);
 			setTimeout(function () {
 				action();
@@ -66,6 +73,8 @@ export default function FirstGuess({
 						height={200}
 					/>
 				</div>
+				{optionDisplays}
+				<div>list of options</div>
 				<div className="flex self-stretch justify-center max-w-7xl">
 					<div className="flex flex-wrap">{playerDisplays}</div>
 				</div>
