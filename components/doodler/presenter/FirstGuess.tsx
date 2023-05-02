@@ -44,6 +44,7 @@ export default function FirstGuess({
 
 		setPlayerDisplays(updatedPlayers);
 		if (numFinishedPlayers + 1 === players.length) {
+			console.log("first guess finished");
 			setMessage("All finished!");
 			setTimeout(function () {
 				setMessage("On to the next guess!");

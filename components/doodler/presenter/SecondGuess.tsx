@@ -25,13 +25,13 @@ export default function SecondGuess({
 	);
 
 	useEffect(() => {
-		var readyToContinue = true;
+		var numFinishedPlayers = 0;
 		var updatedPlayers = players.map((player) => {
-			if (!player.firstGuess) readyToContinue = false;
+			if (player.secondGuess) ++numFinishedPlayers;
 
 			return (
 				<div key={player.id}>
-					{player.firstGuess && (
+					{player.secondGuess && (
 						<div className="m-3">
 							<img
 								className="border-2 rounded-md border-teal-500"
@@ -50,7 +50,8 @@ export default function SecondGuess({
 		});
 
 		setPlayerDisplays(updatedPlayers);
-		if (readyToContinue) {
+		if (numFinishedPlayers + 1 === players.length) {
+			console.log("second guess finished");
 			setMessage("All finished!");
 			setTimeout(function () {
 				setMessage("Lets see the results!");

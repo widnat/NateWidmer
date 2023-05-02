@@ -21,9 +21,10 @@ export default function Doodler() {
 		playersRef.current = updatedPlayers;
 		_setPlayers(updatedPlayers);
 	};
-	const [isFirstGuess, setIsFirstGuess] = useState(false);
 	const [options, setOptions] = useState(new Array<string>());
+	const [isFirstGuess, setIsFirstGuess] = useState(false);
 	const [isSecondGuess, setIsSecondGuess] = useState(false);
+	const [isResults, setIsResults] = useState(false);
 	var hasConstructed = false;
 	const [gameIndex, setGameIndex] = useState(-1);
 	const [playerAssignmentIndex, setPlayerAssignmentIndex] = useState(-1);
@@ -105,39 +106,51 @@ export default function Doodler() {
 			var logMsg = "got first guess from playerId:" + message.playerId;
 			console.log(logMsg);
 		} else if (message.type === "submit second guess") {
-			//show results for this round then start next round
+			var players = new Array<Player>();
+			playersRef.current.forEach((player) => {
+				if (player.id === message.playerId) player.secondGuess = message.value;
+
+				players.push(player);
+			});
+
+			setPlayers(players);
+			var logMsg = "got second guess from playerId:" + message.playerId;
+			console.log(logMsg);
 		}
 	}
 
 	function CreateDoodles() {
-		setRound(1);
-		var updatedPlayers = new Array<Player>();
-		playersRef.current.forEach((player) => {
-			var assignment = GetRandomDoodleAssignment();
-			var newPlayer = {
-				id: player.id,
-				name: player.name,
-				pictureURL: player.pictureURL,
-				assignment: assignment,
-				score: player.score,
-			} as Player;
-			updatedPlayers.push(newPlayer);
-			var msg = {
-				type: "create doodle",
-				gameIndex: gameIndex,
-				playerId: newPlayer.id,
-				value: assignment.assignment,
-			} as Message;
-			SendMessage(msg);
-		});
+		if (playersRef.current.length > 1) {
+			setRound(1);
+			var updatedPlayers = new Array<Player>();
+			playersRef.current.forEach((player) => {
+				var assignment = GetRandomDoodleAssignment();
+				var newPlayer = {
+					id: player.id,
+					name: player.name,
+					pictureURL: player.pictureURL,
+					assignment: assignment,
+					score: player.score,
+				} as Player;
+				updatedPlayers.push(newPlayer);
+				var msg = {
+					type: "create doodle",
+					gameIndex: gameIndex,
+					playerId: newPlayer.id,
+					value: assignment.assignment,
+				} as Message;
+				SendMessage(msg);
+			});
 
-		setPlayers(updatedPlayers);
+			setPlayers(updatedPlayers);
+		}
 	}
 
 	function GoToNextPlayerAssignment() {
 		setRound(-1);
 		setIsFirstGuess(true);
 		setIsSecondGuess(false);
+		setIsResults(false);
 		console.log("in GoToNextPlayerAssignment");
 		var index = playerAssignmentIndex + 1;
 		var assignmentIndexMsg = "player assignment index: " + index;
@@ -175,12 +188,13 @@ export default function Doodler() {
 		});
 	}
 
-	function StartSecondGuess() {
+	function FinishFirstGuess() {
+		setIsFirstGuess(false);
+		setIsSecondGuess(true);
 		console.log("in StartSecondGuess");
 		var updatedOptions = new Array<string>();
 		playersRef.current.forEach((player) => {
-			if (player.firstGuess)
-				updatedOptions.push(player.firstGuess);
+			if (player.firstGuess) updatedOptions.push(player.firstGuess);
 		});
 		setOptions(updatedOptions);
 		var updatedOptionsString = JSON.stringify(updatedOptions);
@@ -201,6 +215,8 @@ export default function Doodler() {
 	}
 
 	function FinishSecondGuess() {
+		setIsSecondGuess(false);
+		setIsResults(true);
 		console.log("in FinishSecondGuess");
 	}
 
@@ -231,12 +247,20 @@ export default function Doodler() {
 			)}
 			{playerAssignmentIndex > -1 && isFirstGuess && (
 				<FirstGuess
-					action={StartSecondGuess}
+					action={FinishFirstGuess}
 					players={playersRef.current}
 					playerAssignmentIndex={playerAssignmentIndex}
 				/>
 			)}
 			{playerAssignmentIndex > -1 && isSecondGuess && (
+				<SecondGuess
+					action={FinishSecondGuess}
+					players={playersRef.current}
+					playerAssignmentIndex={playerAssignmentIndex}
+					options={options}
+				/>
+			)}
+			{playerAssignmentIndex > -1 && isResults && (
 				<SecondGuess
 					action={FinishSecondGuess}
 					players={playersRef.current}

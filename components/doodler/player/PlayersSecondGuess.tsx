@@ -22,6 +22,8 @@ export default function PlayersSecondGuess({ submitGuess, options }: Props) {
 
 	function submit(option: string) {
 		setWaiting(true);
+		var msg = "guess was: " + option;
+		console.log(msg);
 		submitGuess(option);
 	}
 
