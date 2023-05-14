@@ -135,7 +135,10 @@ export default function Doodler() {
 			)}
 			{connected && isSecondGuess && (
 				<div className="h-screen">
-					<PlayersSecondGuess submitGuess={submitSecondGuess} options={options} />
+					<PlayersSecondGuess
+						submitGuess={submitSecondGuess}
+						options={options}
+					/>
 				</div>
 			)}
 		</>

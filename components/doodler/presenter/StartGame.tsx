@@ -16,14 +16,16 @@ export default function StartGame({ gameIndex, action, players }: Props) {
 	useEffect(() => {
 		var updatedPlayers = players.map((player) => {
 			return (
-				<div key={player.id} className="m-3">
-					<img
-						className="border-2 rounded-md border-teal-500"
-						key={player.name}
-						src={player.pictureURL}
-						width={200}
-						height={200}
-					/>
+				<div key={player.id} className="flex-col m-3">
+					<div className="flex self-stretch justify-center">
+						<img
+							className="border-2 rounded-md border-teal-500"
+							key={player.name}
+							src={player.pictureURL}
+							width={100}
+							height={100}
+						/>
+					</div>
 					<div className="flex mt-3 self-stretch justify-center text-lg text-teal-700 uppercase font-extrabold">
 						{player.name}
 					</div>
@@ -48,6 +50,9 @@ export default function StartGame({ gameIndex, action, players }: Props) {
 							<Btn action={() => action()} text="Start Game" />
 						</div>
 
+						<div className="flex self-stretch justify-center text-4xl font-bold pt-16">
+							Players that have joined
+						</div>
 						<div className="flex self-stretch justify-center max-w-7xl">
 							<div className="flex flex-wrap">{playerDisplays}</div>
 						</div>

@@ -101,59 +101,59 @@ export default function DrawingArea({ action, actionText }: Props) {
 	return (
 		<div className="flex items-center justify-center">
 			<div className="flex-col">
-				<canvas
-					ref={canvasRef}
-					onMouseDown={onMouseDown}
-					width={canvasWidth}
-					height={canvasHeight}
-					className="border border-teal-300 rounded-md"
-				/>
-				<div className="flex-row">
+				<div className="flex self-stretch justify-center mb-2">
+					<Btn action={submit} text={actionText} />
+					<div className="mx-3"></div>
+					<Btn action={clear} text="Clear canvas" />
+				</div>
+				<div className="flex self-stretch justify-center">
+					<canvas
+						ref={canvasRef}
+						onMouseDown={onMouseDown}
+						width={canvasWidth}
+						height={canvasHeight}
+						className="border border-teal-300 rounded-md"
+					/>
+				</div>
+				<div className="flex-row mb-4">
 					<div className="flex self-stretch justify-center my-5">
 						<input
 							onChange={(e) => setLineWidth(e.target.valueAsNumber)}
 							value={lineWidth}
-							className="w-64 mr-10 cursor-pointer accent-teal-500 rounded-full"
+							className="w-40 mr-1 cursor-pointer accent-teal-500 rounded-full"
 							type="range"
 							min="4"
 							max="20"
 							step="1"
 						/>
-					</div>
-					<div className="flex self-stretch justify-center my-5">
 						<div
 							onClick={() => setColor("red")}
-							className="font-bold mx-3 text-gray-700 rounded-full bg-red-500 flex-col items-center justify-center font-mono h-8 w-8"
+							className="font-bold mx-1 text-gray-700 rounded-full bg-red-500 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
 							onClick={() => setColor("orange")}
-							className="font-bold mx-3 text-gray-700 rounded-full bg-orange-400 flex-col items-center justify-center font-mono h-8 w-8"
+							className="font-bold mx-1 text-gray-700 rounded-full bg-orange-400 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
 							onClick={() => setColor("yellow")}
-							className="font-bold mx-3 text-gray-700 rounded-full bg-yellow-300 flex-col items-center justify-center font-mono h-8 w-8"
+							className="font-bold mx-1 text-gray-700 rounded-full bg-yellow-300 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
 							onClick={() => setColor("green")}
-							className="font-bold mx-3 text-gray-700 rounded-full bg-green-400 flex-col items-center justify-center font-mono h-8 w-8"
+							className="font-bold mx-1 text-gray-700 rounded-full bg-green-400 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
 							onClick={() => setColor("blue")}
-							className="font-bold mx-3 text-gray-700 rounded-full bg-blue-400 flex-col items-center justify-center font-mono h-8 w-8"
+							className="font-bold mx-1 text-gray-700 rounded-full bg-blue-400 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
 							onClick={() => setColor("brown")}
-							className="font-bold mx-3 text-gray-700 rounded-full bg-orange-800 flex-col items-center justify-center font-mono h-8 w-8"
+							className="font-bold mx-1 text-gray-700 rounded-full bg-orange-800 flex-col items-center justify-center font-mono h-8 w-8"
 						/>
 						<div
 							onClick={() => setColor("black")}
-							className="font-bold mx-3 text-gray-700 rounded-full bg-black flex-col items-center justify-center font-mono h-8 w-8"
+							className="font-bold mx-1 text-gray-700 rounded-full bg-black flex-col items-center justify-center font-mono h-8 w-8"
 						/>
-					</div>
-					<div className="flex self-stretch justify-center mb-7">
-						<Btn action={submit} text={actionText} />
-						<div className="mx-3"></div>
-						<Btn action={clear} text="Clear canvas" />
 					</div>
 				</div>
 			</div>

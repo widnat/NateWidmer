@@ -67,6 +67,10 @@ export default function FirstGuess({
 						height={200}
 					/>
 				</div>
+
+				<div className="flex self-stretch justify-center text-4xl font-bold pt-16">
+					Players finished with first guess
+				</div>
 				<div className="flex self-stretch justify-center max-w-7xl">
 					<div className="flex flex-wrap">{playerDisplays}</div>
 				</div>

@@ -17,9 +17,6 @@ export default function SecondGuess({
 	const [playerDisplays, setPlayerDisplays] = useState(
 		new Array<JSX.Element>()
 	);
-	const optionDisplays = options.map((option: string) => {
-		return <div className="flex-row">{option}</div>;
-	});
 	const [message, setMessage] = useState(
 		"What option describes the Doodle the best?"
 	);
@@ -32,16 +29,18 @@ export default function SecondGuess({
 			return (
 				<div key={player.id}>
 					{player.secondGuess && (
-						<div className="m-3">
-							<img
-								className="border-2 rounded-md border-teal-500"
-								key={player.name}
-								src={player.pictureURL}
-								width={200}
-								height={200}
-							/>
+						<div className="flex-col m-3">
+							<div className="flex self-stretch justify-center">
+								<img
+									className="border-2 rounded-md border-teal-500"
+									key={player.name}
+									src={player.pictureURL}
+									width={100}
+									height={100}
+								/>
+							</div>
 							<div className="flex mt-3 self-stretch justify-center text-lg text-teal-700 uppercase font-extrabold">
-								{player.name} Finished!
+								{player.name}
 							</div>
 						</div>
 					)}
@@ -74,8 +73,10 @@ export default function SecondGuess({
 						height={200}
 					/>
 				</div>
-				{optionDisplays}
-				<div>list of options</div>
+
+				<div className="flex self-stretch justify-center text-4xl font-bold pt-16">
+					Players finished with second guess
+				</div>
 				<div className="flex self-stretch justify-center max-w-7xl">
 					<div className="flex flex-wrap">{playerDisplays}</div>
 				</div>
