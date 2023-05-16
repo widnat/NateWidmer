@@ -30,15 +30,15 @@ export default function Home(hex: number) {
 					</div>
 					<div className="flex self-stretch justify-center">
 						<iframe
-							width="560"
-							height="315"
+							width="1280"
+							height="720"
 							src="https://www.youtube.com/embed/QecI_FTcPOw"
-							title="Doodler, a Drawful clone"
+							title="Doodler(a Drawful clone)"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						></iframe>
 					</div>
 
-					<div className="flex self-stretch justify-center">
+					{/* <div className="flex self-stretch justify-center">
 						If you like babies and want to see something funny, watch the video
 						below <span className="text-lg ml-1">&#8595;</span>
 					</div>
@@ -50,7 +50,7 @@ export default function Home(hex: number) {
 							title="Baby love food"
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						/>
-					</div>
+					</div> */}
 				</div>
 				{/* <Projects /> */}
 			</div>
