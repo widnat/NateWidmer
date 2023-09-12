@@ -11,7 +11,7 @@ export default function CreateAssignmentDoodles({ action, players }: Props) {
 		new Array<JSX.Element>()
 	);
 	const [message, setMessage] = useState(
-		"Doodlers, do your best to draw your assignment!"
+		"It's time to draw something AWESOME!"
 	);
 
 	useEffect(() => {

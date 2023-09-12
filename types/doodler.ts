@@ -37,7 +37,10 @@ export type Player = {
 
 export type DoodleAssignment = {
     assignment: string;
-    answers: string[];
-    wrongAnswers: string[];
     drawingURL: string;
+}
+
+export type ChatGptResponse = {
+    success: boolean;
+    content: string;
 }

@@ -1,6 +1,5 @@
 import Head from "next/head";
 import NavBar from "@/components/NavBar/NavBar";
-import Projects from "@/components/Projects";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Home(hex: number) {
@@ -52,7 +51,6 @@ export default function Home(hex: number) {
 						/>
 					</div> */}
 				</div>
-				{/* <Projects /> */}
 			</div>
 		</>
 	);

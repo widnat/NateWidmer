@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Message, AddPlayerMessage, Player } from "@/types/doodler";
+const axios = require('axios').default;
+import { Message, AddPlayerMessage, Player, ChatGptResponse } from "@/types/doodler";
 import StartGame from "@/components/doodler/presenter/StartGame";
 import Spinner from "@/components/Spinner";
 import NavBar from "@/components/NavBar/NavBar";
 import Title from "@/components/Title";
 import CreateAssignmentDoodles from "@/components/doodler/presenter/CreateAssignmentDoodles";
-import { GetDoodleAssignment } from "@/components/doodler/DoodlerEngine";
 import FirstGuess from "@/components/doodler/presenter/FirstGuess";
 import SecondGuess from "@/components/doodler/presenter/SecondGuess";
 import Results from "@/components/doodler/presenter/Results";
@@ -17,6 +17,7 @@ export default function Doodler() {
 		playersRef.current = updatedPlayers;
 		_setPlayers(updatedPlayers);
 	};
+	const serverAddress = "ws://localhost:8080"; // change this in production
 	const [options, setOptions] = useState(new Array<string>());
 	const [isFirstGuess, setIsFirstGuess] = useState(false);
 	const [isSecondGuess, setIsSecondGuess] = useState(false);
@@ -32,23 +33,10 @@ export default function Doodler() {
 	const ws = useRef<WebSocket>();
 	var nextNewPlayerIndex = useRef(0);
 
-	//start game
-	//draw!
-	// timer is going
-	// timer ends
-	// next page
-	//what is it? shows an image
-	// people guess from a list of choices and get points for guess
-	// timer is going
-	// when everyone has finished the next page goes
-	// keep the image and show all the guesses
-	// give points for guesses
-	// music in background
-
 	useEffect(() => {
 		if (!hasConstructed) {
 			hasConstructed = true;
-			ws.current = new WebSocket("ws://localhost:8080", "presenter");
+			ws.current = new WebSocket(serverAddress, "presenter"); 
 			ws.current.onerror = (err) => console.error(err);
 			ws.current.onopen = (event) => setLoading(false);
 			ws.current.onmessage = (msg: any) => handleServerMessage(msg.data);
@@ -123,22 +111,31 @@ export default function Doodler() {
 			setRound(1);
 			var updatedPlayers = new Array<Player>();
 			playersRef.current.forEach((player) => {
-				var assignment = GetDoodleAssignment(player.id);
-				var newPlayer = {
-					id: player.id,
-					name: player.name,
-					pictureURL: player.pictureURL,
-					assignment: assignment,
-					score: player.score,
-				} as Player;
-				updatedPlayers.push(newPlayer);
-				var msg = {
-					type: "create doodle",
-					gameIndex: gameIndex,
-					playerId: newPlayer.id,
-					value: assignment.assignment,
-				} as Message;
-				SendMessage(msg);
+				axios.get('ws://localhost:8080/getChatGptDrawingAssignment') // change this in production
+				.then(function (response : ChatGptResponse) {
+					console.log(response);
+					if (response.success) {
+						var assignment = GetDoodleAssignment(player.id);
+						var newPlayer = {
+							id: player.id,
+							name: player.name,
+							pictureURL: player.pictureURL,
+							assignment: assignment,
+							score: player.score,
+						} as Player;
+						updatedPlayers.push(newPlayer);
+						var msg = {
+							type: "create doodle",
+							gameIndex: gameIndex,
+							playerId: newPlayer.id,
+							value: assignment.assignment,
+						} as Message;
+						SendMessage(msg);
+					}
+				  })
+				  .catch(function (error : any) {
+					console.log(`issue getting drawing description from server: ${error}`)
+				  })
 			});
 
 			setPlayers(updatedPlayers);
