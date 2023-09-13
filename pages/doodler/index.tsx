@@ -114,7 +114,7 @@ export default function Doodler() {
 		console.log(logMsg);
 	}
 
-	function CreateDoodles() {
+	function createDoodles() {
 		if (playersRef.current.length > 1) {
 			setComponent(PresenterComponent.CreateAssignment);
 			var updatedPlayers = new Array<Player>();
@@ -123,7 +123,7 @@ export default function Doodler() {
 				.then(function (response : ChatGptResponse) {
 					console.log(response);
 					if (response.success) {
-						var newPlayer = AskPlayerToCreateDoodle(player, response.content);
+						var newPlayer = askPlayerToCreateDoodle(player, response.content);
 						updatedPlayers.push(newPlayer);
 					}
 				  })
@@ -137,7 +137,7 @@ export default function Doodler() {
 		}
 	}
 
-	function AskPlayerToCreateDoodle(player: Player, drawingDescription: string) {
+	function askPlayerToCreateDoodle(player: Player, drawingDescription: string) {
 		var doodleAssignment:DoodleAssignment = {
 			assignment: drawingDescription,
 			drawingURL: ''
@@ -155,12 +155,12 @@ export default function Doodler() {
 			playerId: newPlayer.id,
 			value: doodleAssignment.assignment,
 		} as Message;
-		SendMessage(msg);
+		sendMessage(msg);
 
 		return newPlayer;
 	}
 
-	function GoToNextPlayerAssignment() {
+	function goToNextPlayerAssignment() {
 		setComponent(PresenterComponent.FirstGuess);
 		console.log("in GoToNextPlayerAssignment");
 		var index = playerAssignmentIndex + 1;
@@ -184,7 +184,7 @@ export default function Doodler() {
 					gameIndex: gameIndex,
 					playerId: player.id,
 				} as Message;
-				SendMessage(msg);
+				sendMessage(msg);
 			} else {
 				var logMsg =
 					"playerId: " + player.id + " is about to make their first guess";
@@ -194,12 +194,12 @@ export default function Doodler() {
 					gameIndex: gameIndex,
 					playerId: player.id,
 				} as Message;
-				SendMessage(msg);
+				sendMessage(msg);
 			}
 		});
 	}
 
-	function FinishFirstGuess() {
+	function finishFirstGuess() {
 		setComponent(PresenterComponent.SecondGuess)
 		console.log("in FinishFirstGuess");
 		var updatedOptions = new Array<string>();
@@ -222,12 +222,12 @@ export default function Doodler() {
 					playerId: player.id,
 					value: updatedOptionsString,
 				} as Message;
-				SendMessage(msg);
+				sendMessage(msg);
 			}
 		});
 	}
 
-	function FinishSecondGuess() {
+	function finishSecondGuess() {
 		if (playerAssignmentIndex == playersRef.current.length - 1)
 			setResultsMessage("Here are the final results!");
 
@@ -235,28 +235,42 @@ export default function Doodler() {
 		var playerAssignment = playersRef.current[playerAssignmentIndex].assignment;
 		var updatedPlayers = new Array<Player>();
 		playersRef.current.forEach((player) => {
-			player.score += GetPoints(player.firstGuess, playerAssignment.answers);
-			player.score += GetPoints(player.secondGuess, playerAssignment.answers);
+			player.score += getPoints(player.firstGuess, playerAssignment.assignment);
+			player.score += player.secondGuess === playerAssignment.assignment ? 100 : 0;
 			updatedPlayers.push(player);
 		});
 		setPlayers(updatedPlayers);
 		setComponent(PresenterComponent.Results)
 		setTimeout(function () {
 			if (playerAssignmentIndex < playersRef.current.length - 1)
-				GoToNextPlayerAssignment();
+				goToNextPlayerAssignment();
 		}, 5000);
 	}
 
-	function GetPoints(guess: string, answers: string[]) {
+	function getPoints(guess: string, answer: string) {
 		var points = 0;
-		answers.forEach((answer) => {
-			if (guess.includes(answer)) points += 5;
+		let guessWords = stringToSet(guess);
+		let answerWords = stringToSet(answer);
+		guessWords.forEach(word => {
+			if (answerWords.has(word)) {
+				points += 5;
+			}
 		});
 
 		return points;
 	}
 
-	function SendMessage(msg: Message) {
+	function stringToSet(s: string) {
+		var words = s.split(' ');
+		var set = new Set();
+		words.forEach(word => {
+			set.add(word);
+		});
+
+		return set;
+	}
+
+	function sendMessage(msg: Message) {
 		var jsonRequest = JSON.stringify(msg);
 		if (ws.current !== undefined) {
 			ws.current.send(jsonRequest);
@@ -271,26 +285,26 @@ export default function Doodler() {
 			{component === PresenterComponent.StartGame && (
 				<StartGame
 					gameIndex={gameIndex}
-					action={CreateDoodles}
+					action={createDoodles}
 					players={playersRef.current}
 				/>
 			)}
 			{component === PresenterComponent.CreateAssignment && (
 				<CreateAssignmentDoodles
-					action={GoToNextPlayerAssignment}
+					action={goToNextPlayerAssignment}
 					players={playersRef.current}
 				/>
 			)}
 			{component === PresenterComponent.FirstGuess && (
 				<FirstGuess
-					action={FinishFirstGuess}
+					action={finishFirstGuess}
 					players={playersRef.current}
 					playerAssignmentIndex={playerAssignmentIndex}
 				/>
 			)}
 			{component === PresenterComponent.SecondGuess && (
 				<SecondGuess
-					action={FinishSecondGuess}
+					action={finishSecondGuess}
 					players={playersRef.current}
 					playerAssignmentIndex={playerAssignmentIndex}
 					options={options}
