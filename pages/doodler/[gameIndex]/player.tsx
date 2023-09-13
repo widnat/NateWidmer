@@ -7,6 +7,7 @@ import NavBar from "@/components/NavBar/NavBar";
 import Title from "@/components/Title";
 import PlayersFirstGuess from "@/components/doodler/player/PlayersFirstGuess";
 import PlayersSecondGuess from "@/components/doodler/player/PlayersSecondGuess";
+import { MessageType, PlayerComponent } from "@/enums/doodler";
 
 export default function Doodler() {
 	const router = useRouter();
@@ -15,10 +16,7 @@ export default function Doodler() {
 	var hasConstructed = false;
 	const playerId = useRef<number>(-1);
 	const [doodleAssignment, setDoodleAssignment] = useState("");
-	const [round, setRound] = useState(0);
-	const [isPlayersAssignment, setIsPlayersAssignment] = useState(false);
-	const [isFirstGuess, setIsFirstGuess] = useState(false);
-	const [isSecondGuess, setIsSecondGuess] = useState(false);
+	const [component, setComponent] = useState(PlayerComponent.JoinGame);
 	const [options, setOptions] = useState(new Array<string>());
 	const ws = useRef<WebSocket>();
 
@@ -34,26 +32,20 @@ export default function Doodler() {
 
 	function handleServerMessage(msg: string) {
 		const message = JSON.parse(msg) as Message;
-		if (message.type === "player id") {
+		if (message.type === MessageType.PlayerId) {
 			playerId.current = Number(message.value);
-		} else if (message.type === "create doodle") {
+		} else if (message.type === MessageType.CreateDoodle) {
 			setDoodleAssignment(message.value);
-			setRound(1);
-		} else if (message.type === "sit back and relax") {
+			setComponent(PlayerComponent.CreateAssignmentDoodle)
+		} else if (message.type === MessageType.WaitingForOtherPlayers) {
 			console.log("waiting for other players to guess");
-			setRound(-1);
-			setIsPlayersAssignment(true);
-		} else if (message.type === "time to guess") {
+			setComponent(PlayerComponent.WaitingForOtherPlayers);
+		} else if (message.type === MessageType.MakeAGuess) {
 			console.log("ready to guess");
-			setRound(-1);
-			setIsPlayersAssignment(false);
-			setIsFirstGuess(true);
-			setIsSecondGuess(false);
-		} else if (message.type === "time to guess again") {
+			setComponent(PlayerComponent.PlayersFirstGuess);
+		} else if (message.type === MessageType.ChooseYourAnswer) {
 			console.log("ready to guess again");
-			setIsPlayersAssignment(false);
-			setIsFirstGuess(false);
-			setIsSecondGuess(true);
+			setComponent(PlayerComponent.PlayersSecondGuess);
 			var updateOptions = JSON.parse(message.value) as Array<string>;
 			setOptions(updateOptions);
 		}
@@ -66,7 +58,7 @@ export default function Doodler() {
 		} as AddPlayerMessage;
 		var jsonAddPlayer = JSON.stringify(addPlayer);
 		var msg = {
-			type: "add player",
+			type: MessageType.AddPlayer,
 			gameIndex: gameIndex,
 			value: jsonAddPlayer,
 		} as Message;
@@ -75,7 +67,7 @@ export default function Doodler() {
 
 	function submitAssignmentDoodle(doodleURL: string) {
 		var msg = {
-			type: "submit assignment doodle",
+			type: MessageType.SubmitAssignmentDoodle,
 			gameIndex: gameIndex,
 			playerId: playerId.current,
 			value: doodleURL,
@@ -85,7 +77,7 @@ export default function Doodler() {
 
 	function submitFirstGuess(guess: string) {
 		var msg = {
-			type: "submit first guess",
+			type: MessageType.SubmitFirstGuess,
 			gameIndex: gameIndex,
 			playerId: playerId.current,
 			value: guess,
@@ -95,7 +87,7 @@ export default function Doodler() {
 
 	function submitSecondGuess(guess: string) {
 		var msg = {
-			type: "submit second guess",
+			type: MessageType.SubmitSecondGuess,
 			gameIndex: gameIndex,
 			playerId: playerId.current,
 			value: guess,
@@ -114,26 +106,28 @@ export default function Doodler() {
 		<>
 			<NavBar />
 			<Title title="Doodler" page="" />
-			{connected && round === 0 && <JoinGame action={joinGame} />}
-			{connected && round === 1 && (
+			{connected && component === PlayerComponent.JoinGame && (
+				<JoinGame action={joinGame} />
+			)}
+			{connected && component === PlayerComponent.CreateAssignmentDoodle && (
 				<CreateAssignmentDoodle
 					action={submitAssignmentDoodle}
 					assignment={doodleAssignment}
 				/>
 			)}
-			{connected && isPlayersAssignment && (
+			{connected && component === PlayerComponent.WaitingForOtherPlayers && (
 				<div className="h-screen">
 					<div className="flex items-center justify-center">
 						sit back and relax while the others guess!
 					</div>
 				</div>
 			)}
-			{connected && isFirstGuess && (
+			{connected && component === PlayerComponent.PlayersFirstGuess && (
 				<div className="h-screen">
 					<PlayersFirstGuess submitGuess={submitFirstGuess} />
 				</div>
 			)}
-			{connected && isSecondGuess && (
+			{connected && component === PlayerComponent.PlayersSecondGuess && (
 				<div className="h-screen">
 					<PlayersSecondGuess
 						submitGuess={submitSecondGuess}

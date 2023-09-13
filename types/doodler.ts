@@ -3,7 +3,7 @@ export type Game = {
 }
 
 export type Message = {
-    type: string;
+    type: number;
     gameIndex: number;
     playerId: number;
     value: string;

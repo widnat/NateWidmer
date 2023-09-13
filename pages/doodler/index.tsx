@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 const axios = require('axios').default;
-import { Message, AddPlayerMessage, Player, ChatGptResponse } from "@/types/doodler";
+import { Message, AddPlayerMessage, Player, ChatGptResponse, DoodleAssignment } from "@/types/doodler";
 import StartGame from "@/components/doodler/presenter/StartGame";
 import Spinner from "@/components/Spinner";
 import NavBar from "@/components/NavBar/NavBar";
@@ -9,15 +9,9 @@ import CreateAssignmentDoodles from "@/components/doodler/presenter/CreateAssign
 import FirstGuess from "@/components/doodler/presenter/FirstGuess";
 import SecondGuess from "@/components/doodler/presenter/SecondGuess";
 import Results from "@/components/doodler/presenter/Results";
+import { PresenterComponent, MessageType } from "@/enums/doodler";
 
 export default function Doodler() {
-	enum Component {
-		StartGame,
-		CreateAssignment,
-		FirstGuess,
-		SecondGuess,
-		Results
-	  }
 	const [_players, _setPlayers] = useState<Player[]>([]);
 	const playersRef = useRef(_players);
 	const setPlayers = (updatedPlayers: Player[]) => {
@@ -29,7 +23,7 @@ export default function Doodler() {
 	var hasConstructed = false;
 	const [gameIndex, setGameIndex] = useState(-1);
 	const [playerAssignmentIndex, setPlayerAssignmentIndex] = useState(-1);
-	const [component, setComponent] = useState(Component.StartGame);
+	const [component, setComponent] = useState(PresenterComponent.StartGame);
 	const [loading, setLoading] = useState(true);
 	const [resultsMessage, setResultsMessage] = useState(
 		"That was a great round!"
@@ -49,16 +43,16 @@ export default function Doodler() {
 
 	function handleServerMessage(msg: string) {
 		const message = JSON.parse(msg) as Message;
-		if (message.type === "game index") {
+		if (message.type === MessageType.GameIndex) {
 			setGameIndex(Number(message.value));
-		} else if (message.type === "add player") {
+		} else if (message.type === MessageType.AddPlayer) {
 			const addPlayerMessage = JSON.parse(message.value) as AddPlayerMessage;
 			addPlayer(addPlayerMessage);
-		} else if (message.type === "submit assignment doodle") {
+		} else if (message.type === MessageType.SubmitAssignmentDoodle) {
 			submitAssignmentDoodle(message);
-		} else if (message.type === "submit first guess") {
+		} else if (message.type === MessageType.SubmitFirstGuess) {
 			submitFirstGuess(message);
-		} else if (message.type === "submit second guess") {
+		} else if (message.type === MessageType.SubmitSecondGuess) {
 			submitSecondGuess(message);
 		}
 	}
@@ -96,59 +90,46 @@ export default function Doodler() {
 
 	function submitFirstGuess(message : Message) {
 		var players = new Array<Player>();
-			playersRef.current.forEach((player) => {
-				if (player.id === message.playerId) player.firstGuess = message.value;
+		playersRef.current.forEach((player) => {
+			if (player.id === message.playerId) player.firstGuess = message.value;
 
-				players.push(player);
-			});
+			players.push(player);
+		});
 
-			setPlayers(players);
-			var logMsg = "got first guess from playerId:" + message.playerId;
-			console.log(logMsg);
+		setPlayers(players);
+		var logMsg = "got first guess from playerId:" + message.playerId;
+		console.log(logMsg);
 	}
 	
 	function submitSecondGuess(message : Message) {
 		var players = new Array<Player>();
-			playersRef.current.forEach((player) => {
-				if (player.id === message.playerId) player.secondGuess = message.value;
+		playersRef.current.forEach((player) => {
+			if (player.id === message.playerId) player.secondGuess = message.value;
 
-				players.push(player);
-			});
+			players.push(player);
+		});
 
-			setPlayers(players);
-			var logMsg = "got second guess from playerId:" + message.playerId;
-			console.log(logMsg);
+		setPlayers(players);
+		var logMsg = "got second guess from playerId:" + message.playerId;
+		console.log(logMsg);
 	}
 
 	function CreateDoodles() {
 		if (playersRef.current.length > 1) {
-			setComponent(Component.CreateAssignment);
+			setComponent(PresenterComponent.CreateAssignment);
 			var updatedPlayers = new Array<Player>();
 			playersRef.current.forEach((player) => {
 				axios.get('ws://localhost:8080/getChatGptDrawingAssignment') // change this in production
 				.then(function (response : ChatGptResponse) {
 					console.log(response);
 					if (response.success) {
-						var assignment = GetDoodleAssignment(player.id);
-						var newPlayer = {
-							id: player.id,
-							name: player.name,
-							pictureURL: player.pictureURL,
-							assignment: assignment,
-							score: player.score,
-						} as Player;
+						var newPlayer = AskPlayerToCreateDoodle(player, response.content);
 						updatedPlayers.push(newPlayer);
-						var msg = {
-							type: "create doodle",
-							gameIndex: gameIndex,
-							playerId: newPlayer.id,
-							value: assignment.assignment,
-						} as Message;
-						SendMessage(msg);
 					}
 				  })
 				  .catch(function (error : any) {
 					console.log(`issue getting drawing description from server: ${error}`)
+					//how should I notify the user or try again
 				  })
 			});
 
@@ -156,8 +137,31 @@ export default function Doodler() {
 		}
 	}
 
+	function AskPlayerToCreateDoodle(player: Player, drawingDescription: string) {
+		var doodleAssignment:DoodleAssignment = {
+			assignment: drawingDescription,
+			drawingURL: ''
+		};
+		var newPlayer = {
+			id: player.id,
+			name: player.name,
+			pictureURL: player.pictureURL,
+			assignment: doodleAssignment,
+			score: player.score,
+		} as Player;
+		var msg = {
+			type: MessageType.CreateDoodle,
+			gameIndex: gameIndex,
+			playerId: newPlayer.id,
+			value: doodleAssignment.assignment,
+		} as Message;
+		SendMessage(msg);
+
+		return newPlayer;
+	}
+
 	function GoToNextPlayerAssignment() {
-		setComponent(Component.FirstGuess);
+		setComponent(PresenterComponent.FirstGuess);
 		console.log("in GoToNextPlayerAssignment");
 		var index = playerAssignmentIndex + 1;
 		var assignmentIndexMsg = "player assignment index: " + index;
@@ -176,7 +180,7 @@ export default function Doodler() {
 					"playerId: " + player.id + " is waiting for others to guess";
 				console.log(logMsg);
 				var msg = {
-					type: "sit back and relax",
+					type: MessageType.WaitingForOtherPlayers,
 					gameIndex: gameIndex,
 					playerId: player.id,
 				} as Message;
@@ -186,7 +190,7 @@ export default function Doodler() {
 					"playerId: " + player.id + " is about to make their first guess";
 				console.log(logMsg);
 				var msg = {
-					type: "time to guess",
+					type: MessageType.MakeAGuess,
 					gameIndex: gameIndex,
 					playerId: player.id,
 				} as Message;
@@ -196,17 +200,13 @@ export default function Doodler() {
 	}
 
 	function FinishFirstGuess() {
-		setComponent(Component.SecondGuess)
-		console.log("in StartSecondGuess");
+		setComponent(PresenterComponent.SecondGuess)
+		console.log("in FinishFirstGuess");
 		var updatedOptions = new Array<string>();
 		playersRef.current.forEach((player) => {
 			if (player.firstGuess) updatedOptions.push(player.firstGuess);
 		});
 		var curAssignment = playersRef.current[playerAssignmentIndex].assignment;
-		curAssignment.wrongAnswers.forEach((wrongAnswer) => {
-			var randomIndex = Math.floor(Math.random() * updatedOptions.length);
-			updatedOptions.splice(randomIndex, 0, wrongAnswer);
-		});
 		var randomIndex = Math.floor(Math.random() * updatedOptions.length);
 		updatedOptions.splice(randomIndex, 0, curAssignment.assignment);
 		setOptions(updatedOptions);
@@ -217,7 +217,7 @@ export default function Doodler() {
 					"playerId: " + player.id + " is about to make their second guess";
 				console.log(logMsg);
 				var msg = {
-					type: "time to guess again",
+					type: MessageType.ChooseYourAnswer,
 					gameIndex: gameIndex,
 					playerId: player.id,
 					value: updatedOptionsString,
@@ -240,7 +240,7 @@ export default function Doodler() {
 			updatedPlayers.push(player);
 		});
 		setPlayers(updatedPlayers);
-		setComponent(Component.Results)
+		setComponent(PresenterComponent.Results)
 		setTimeout(function () {
 			if (playerAssignmentIndex < playersRef.current.length - 1)
 				GoToNextPlayerAssignment();
@@ -268,27 +268,27 @@ export default function Doodler() {
 			<NavBar />
 			<Title title="Doodler" page="" />
 			{loading && <Spinner message="loading..." />}
-			{component === Component.StartGame && (
+			{component === PresenterComponent.StartGame && (
 				<StartGame
 					gameIndex={gameIndex}
 					action={CreateDoodles}
 					players={playersRef.current}
 				/>
 			)}
-			{component === Component.CreateAssignment && (
+			{component === PresenterComponent.CreateAssignment && (
 				<CreateAssignmentDoodles
 					action={GoToNextPlayerAssignment}
 					players={playersRef.current}
 				/>
 			)}
-			{component === Component.FirstGuess && (
+			{component === PresenterComponent.FirstGuess && (
 				<FirstGuess
 					action={FinishFirstGuess}
 					players={playersRef.current}
 					playerAssignmentIndex={playerAssignmentIndex}
 				/>
 			)}
-			{component === Component.SecondGuess && (
+			{component === PresenterComponent.SecondGuess && (
 				<SecondGuess
 					action={FinishSecondGuess}
 					players={playersRef.current}
@@ -296,7 +296,7 @@ export default function Doodler() {
 					options={options}
 				/>
 			)}
-			{component === Component.Results && (
+			{component === PresenterComponent.Results && (
 				<Results message={resultsMessage} players={playersRef.current} />
 			)}
 		</div>
