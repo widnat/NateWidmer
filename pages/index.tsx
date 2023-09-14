@@ -36,20 +36,6 @@ export default function Home(hex: number) {
 							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						></iframe>
 					</div>
-
-					{/* <div className="flex self-stretch justify-center">
-						If you like babies and want to see something funny, watch the video
-						below <span className="text-lg ml-1">&#8595;</span>
-					</div>
-					<div className="flex self-stretch justify-center">
-						<iframe
-							width="320"
-							height="560"
-							src="https://www.youtube.com/embed/PUr0Z2lC2TY"
-							title="Baby love food"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-						/>
-					</div> */}
 				</div>
 			</div>
 		</>

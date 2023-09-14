@@ -119,7 +119,7 @@ export default function Doodler() {
 			setComponent(PresenterComponent.CreateAssignment);
 			var updatedPlayers = new Array<Player>();
 			playersRef.current.forEach((player) => {
-				axios.get('ws://localhost:8080/getChatGptDrawingAssignment') // change this in production
+				axios.get('http://localhost:8080/getChatGptDrawingAssignment') // change this in production
 				.then(function (response : ChatGptResponse) {
 					console.log(response);
 					if (response.success) {
