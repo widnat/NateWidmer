@@ -115,26 +115,29 @@ export default function Doodler() {
 		console.log(logMsg);
 	}
 
-	function createDoodles() {
+	async function createDoodles() {
 		if (playersRef.current.length > 1) {
-			setComponent(PresenterComponent.CreateAssignment);
-			var updatedPlayers = new Array<Player>();
-			playersRef.current.forEach((player) => {
-				axios.get('http://localhost:8080/getChatGptDrawingAssignment') // change this in production
-				.then(function (response : ChatGptResponse) {
-					console.log(response);
-					if (response.success) {
-						var newPlayer = askPlayerToCreateDoodle(player, response.content);
+			await axios.get(
+				`http://localhost:8080/getChatGptDrawingAssignment/?numberOfContentsRequested=${playersRef.current.length}`, // change this in production
+				
+			)
+			.then(function (response : ChatGptResponse) {
+				console.log(response);
+				if (response.success) {
+					var updatedPlayers = new Array<Player>();
+					playersRef.current.forEach(async (player) => {
+						var newPlayer = askPlayerToCreateDoodle(player, response.contentList[player.id]);
 						updatedPlayers.push(newPlayer);
-					}
-				  })
-				  .catch(function (error : any) {
-					console.log(`issue getting drawing description from server: ${error}`)
-					//how should I notify the user or try again
-				  })
-			});
-
-			setPlayers(updatedPlayers);
+					});
+		
+					setPlayers(updatedPlayers);
+					setComponent(PresenterComponent.CreateAssignment);
+				}
+			})
+			.catch(function (error : any) {
+				console.log(`issue getting drawing description from server: ${error}`)
+				//how should I notify the user or try again
+			})
 		}
 	}
 

@@ -42,5 +42,5 @@ export type DoodleAssignment = {
 
 export type ChatGptResponse = {
     success: boolean;
-    content: string;
+    contentList: [string];
 }
