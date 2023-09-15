@@ -22,6 +22,7 @@ export default function Doodler() {
 	const [options, setOptions] = useState(new Array<string>());
 	var hasConstructed = false;
 	const [gameIndex, setGameIndex] = useState(-1);
+	const newPlayerLink = `http://localhost:3000/doodler/${gameIndex}/player` //change this in production
 	const [playerAssignmentIndex, setPlayerAssignmentIndex] = useState(-1);
 	const [component, setComponent] = useState(PresenterComponent.StartGame);
 	const [loading, setLoading] = useState(true);
@@ -287,6 +288,7 @@ export default function Doodler() {
 					gameIndex={gameIndex}
 					action={createDoodles}
 					players={playersRef.current}
+					newPlayerLink={newPlayerLink}
 				/>
 			)}
 			{component === PresenterComponent.CreateAssignment && (
