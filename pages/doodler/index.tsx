@@ -12,17 +12,24 @@ import Results from "@/components/doodler/presenter/Results";
 import { PresenterComponent, MessageType } from "@/enums/doodler";
 
 export default function Doodler() {
+	const IS_PRODUCTION = false;
+	const HTTP_PROTOCOL = IS_PRODUCTION ? 'https' : 'http';
+	const WEB_SERVER_PORT = IS_PRODUCTION ? 'find web server port' : '3000';
+	const APP_SERVER_PORT = IS_PRODUCTION ? 'find server port' : '8080';
+	const WEB_ADDRESS=`${IS_PRODUCTION ? 'IPADDRESS' : 'localhost'}:${WEB_SERVER_PORT}`;
+	const APP_ADDRESS=`${IS_PRODUCTION ? 'IPADDRESS' : 'localhost'}:${APP_SERVER_PORT}`;
+
 	const [_players, _setPlayers] = useState<Player[]>([]);
 	const playersRef = useRef(_players);
 	const setPlayers = (updatedPlayers: Player[]) => {
 		playersRef.current = updatedPlayers;
 		_setPlayers(updatedPlayers);
 	};
-	const serverAddress = "ws://localhost:8080"; // change this in production
+	const serverAddress = `ws://${APP_ADDRESS}`
 	const [options, setOptions] = useState(new Array<string>());
 	var hasConstructed = false;
 	const [gameIndex, setGameIndex] = useState(-1);
-	const newPlayerLink = `http://localhost:3000/doodler/${gameIndex}/player` //change this in production
+	const newPlayerLink = `${HTTP_PROTOCOL}://${WEB_ADDRESS}/doodler/${gameIndex}/player`
 	const [playerAssignmentIndex, setPlayerAssignmentIndex] = useState(-1);
 	const [component, setComponent] = useState(PresenterComponent.StartGame);
 	const [loading, setLoading] = useState(true);
@@ -118,7 +125,7 @@ export default function Doodler() {
 	async function createDoodles() {
 		if (playersRef.current.length > 1) {
 			axios.get(
-				`http://localhost:8080/getChatGptDrawingAssignment/?numberOfContentsRequested=${playersRef.current.length}`, // change this in production
+				`${HTTP_PROTOCOL}://${APP_ADDRESS}/getChatGptDrawingAssignment/?numberOfContentsRequested=${playersRef.current.length}`
 			)
 			.then(function (response : any) {
 				let chatGptResponse = response.data as ChatGptResponse
