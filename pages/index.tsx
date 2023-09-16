@@ -15,7 +15,7 @@ export default function Home(hex: number) {
 			<div>
 				<div className="flex-row m-3">
 					<div className="flex self-stretch justify-center text-gray-700 text-3xl">
-						Welcome to my projects website of 2023! You did it!!
+						Welcome to my projects website of 2023! You did it!!!
 					</div>
 					<div className="flex self-stretch justify-center mt-3">
 						Go ahead and check out some of my current projects in the links
