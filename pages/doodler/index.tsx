@@ -117,16 +117,16 @@ export default function Doodler() {
 
 	async function createDoodles() {
 		if (playersRef.current.length > 1) {
-			await axios.get(
+			axios.get(
 				`http://localhost:8080/getChatGptDrawingAssignment/?numberOfContentsRequested=${playersRef.current.length}`, // change this in production
-				
 			)
-			.then(function (response : ChatGptResponse) {
-				console.log(response);
-				if (response.success) {
+			.then(function (response : any) {
+				let chatGptResponse = response.data as ChatGptResponse
+				console.log(chatGptResponse);
+				if (chatGptResponse.success) {
 					var updatedPlayers = new Array<Player>();
 					playersRef.current.forEach(async (player) => {
-						var newPlayer = askPlayerToCreateDoodle(player, response.contentList[player.id]);
+						var newPlayer = askPlayerToCreateDoodle(player, chatGptResponse.contentList[player.id]);
 						updatedPlayers.push(newPlayer);
 					});
 		
@@ -135,7 +135,7 @@ export default function Doodler() {
 				}
 			})
 			.catch(function (error : any) {
-				console.log(`issue getting drawing description from server: ${error}`)
+				console.log(`issue getting drawing description from server: ${JSON.stringify(error)}`)
 				//how should I notify the user or try again
 			})
 		}
