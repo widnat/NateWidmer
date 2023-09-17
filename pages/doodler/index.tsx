@@ -32,7 +32,7 @@ export default function Doodler() {
 	const [component, setComponent] = useState(PresenterComponent.StartGame);
 	const [loading, setLoading] = useState(true);
 	const [resultsMessage, setResultsMessage] = useState(
-		"That was a great round!"
+		"That was a great round!!"
 	);
 	const ws = useRef<WebSocket>();
 	var nextNewPlayerIndex = useRef(0);
